@@ -9,33 +9,38 @@
 
 <div class="flex">
 
-  <!-- MENU -->
   <div class="w-64 bg-blue-900 text-white min-h-screen p-5">
     <h2 class="text-xl font-bold mb-6">Orteconte</h2>
     <ul>
-      <li class="mb-3 font-bold">
-        <a href="dashboard.html">Dashboard</a>
-      </li>
-      <li class="mb-3">
-        <a href="novo.html">Novo Briefing</a>
-      </li>
-      <li class="mb-3">
-        <a href="historico.html">Histórico</a>
-      </li>
-      <li class="mt-6">
-        <button onclick="logout()" class="text-red-300">
-          Sair
-        </button>
-      </li>
+      <li class="mb-3 font-bold"><a href="dashboard.html">Dashboard</a></li>
+      <li class="mb-3"><a href="novo.html">Novo Briefing</a></li>
+      <li class="mb-3"><a href="historico.html">Histórico</a></li>
+      <li class="mt-6"><button onclick="logout()" class="text-red-300">Sair</button></li>
     </ul>
   </div>
 
-  <!-- CONTEÚDO -->
   <div class="flex-1 p-10">
     <h1 class="text-3xl font-bold mb-8">Dashboard</h1>
 
-    <div class="bg-white p-6 rounded-xl shadow">
-      <p>Total de Briefings: <strong id="total">0</strong></p>
+    <h2 class="text-xl font-semibold mb-4">Status</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+      <div onclick="filtrarStatus('Pendente')" class="cursor-pointer bg-yellow-100 p-6 rounded-xl shadow hover:scale-105 transition">
+        <p class="text-yellow-700">Pendentes</p>
+        <h2 id="pendente" class="text-3xl font-bold mt-2 text-yellow-800">0</h2>
+      </div>
+
+      <div onclick="filtrarStatus('Em Andamento')" class="cursor-pointer bg-blue-100 p-6 rounded-xl shadow hover:scale-105 transition">
+        <p class="text-blue-700">Em Andamento</p>
+        <h2 id="andamento" class="text-3xl font-bold mt-2 text-blue-800">0</h2>
+      </div>
+
+      <div onclick="filtrarStatus('Finalizado')" class="cursor-pointer bg-green-100 p-6 rounded-xl shadow hover:scale-105 transition">
+        <p class="text-green-700">Finalizados</p>
+        <h2 id="finalizado" class="text-3xl font-bold mt-2 text-green-800">0</h2>
+      </div>
+
     </div>
 
   </div>
@@ -46,13 +51,15 @@
 
 <script>
 const usuario = JSON.parse(localStorage.getItem("usuario"));
-if (!usuario) {
-  window.location.href = "index.html";
-}
+if (!usuario) window.location.href = "index.html";
 
 function logout() {
   localStorage.removeItem("usuario");
   window.location.href = "index.html";
+}
+
+function filtrarStatus(status) {
+  window.location.href = `historico.html?status=${encodeURIComponent(status)}`;
 }
 
 async function carregarResumo() {
@@ -64,7 +71,20 @@ async function carregarResumo() {
   });
 
   const data = await response.json();
-  document.getElementById("total").innerText = data.length;
+
+  let pendente = 0;
+  let andamento = 0;
+  let finalizado = 0;
+
+  data.forEach(item => {
+    if (item.status === "Pendente") pendente++;
+    else if (item.status === "Em Andamento") andamento++;
+    else if (item.status === "Finalizado") finalizado++;
+  });
+
+  document.getElementById("pendente").innerText = pendente;
+  document.getElementById("andamento").innerText = andamento;
+  document.getElementById("finalizado").innerText = finalizado;
 }
 
 carregarResumo();
