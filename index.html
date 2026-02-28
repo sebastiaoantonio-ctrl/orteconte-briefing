@@ -43,7 +43,7 @@ async function login() {
 
   if (data.length > 0) {
     localStorage.setItem("usuario", JSON.stringify(data[0]));
-    window.location.href = "painel.html"; // 🔥 CORREÇÃO AQUI
+    window.location.href = "dashboard.html";
   } else {
     document.getElementById("msg").innerText = "Email ou senha inválidos.";
   }
