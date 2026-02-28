@@ -62,27 +62,31 @@
         </div>
       </div>
 
-     <!-- ================= DADOS DA EMPRESA ================= -->
+    <!-- ================= DADOS DA EMPRESA ================= -->
 <div class="bg-white p-6 rounded-xl shadow">
-  <h2 class="text-xl font-bold mb-4">Dados da Empresa</h2>
+  <h2 class="text-xl font-bold mb-6">Dados da Empresa</h2>
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-2 gap-6">
 
+    <!-- Razão Social -->
     <div>
       <label class="block font-semibold mb-1">Razão Social *</label>
       <input required class="border p-2 rounded w-full">
     </div>
 
+    <!-- Grupo -->
     <div>
       <label class="block font-semibold mb-1">Grupo</label>
       <input class="border p-2 rounded w-full">
     </div>
 
+    <!-- Nome Fantasia -->
     <div>
       <label class="block font-semibold mb-1">Nome Fantasia *</label>
       <input required class="border p-2 rounded w-full">
     </div>
 
+    <!-- Enquadramento -->
     <div>
       <label class="block font-semibold mb-1">Enquadramento *</label>
       <select required class="border p-2 rounded w-full">
@@ -98,9 +102,9 @@
     <div>
       <label class="block font-semibold mb-1">Natureza Jurídica *</label>
       <select id="naturezaJuridica"
-        required
-        onchange="toggleAdvogado()"
-        class="border p-2 rounded w-full">
+              required
+              onchange="toggleAdvogado()"
+              class="border p-2 rounded w-full">
         <option value="">Selecione</option>
         <option>Sociedade Limitada (LTDA)</option>
         <option>Sociedade Limitada Unipessoal (SLU)</option>
@@ -120,6 +124,140 @@
         <option>Isento</option>
       </select>
     </div>
+
+  </div>
+
+  <!-- BLOCO ADVOGADO (SÓ PARA S/A) -->
+  <div id="blocoAdvogado" class="grid grid-cols-3 gap-6 mt-6" style="display:none;">
+
+    <div>
+      <label class="block font-semibold mb-1">Advogado *</label>
+      <input id="advogado" class="border p-2 rounded w-full">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">CPF Advogado *</label>
+      <input id="cpfAdvogado" class="border p-2 rounded w-full">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">OAB *</label>
+      <input id="oab" class="border p-2 rounded w-full">
+    </div>
+
+  </div>
+
+  <!-- FORMA DE ATUAÇÃO -->
+  <h3 class="font-semibold mt-8 mb-3">Forma de Atuação *</h3>
+
+  <div class="grid grid-cols-3 gap-3 text-sm">
+    <label><input type="checkbox"> Estabelecimento Fixo</label>
+    <label><input type="checkbox"> Televendas</label>
+    <label><input type="checkbox"> Local Fixo Fora da Loja</label>
+    <label><input type="checkbox"> Internet</label>
+    <label><input type="checkbox"> Correios</label>
+    <label><input type="checkbox"> Porta a Porta / Postos Móveis</label>
+    <label><input type="checkbox"> Máquinas Automáticas</label>
+    <label><input type="checkbox"> Atividades Fora do Estabelecimento</label>
+  </div>
+
+  <!-- Alvará e Licitações -->
+  <div class="grid grid-cols-2 gap-6 mt-6">
+
+    <div>
+      <label class="block font-semibold mb-1">Alvará *</label>
+      <select required class="border p-2 rounded w-full">
+        <option value="">Selecione</option>
+        <option>Sim</option>
+        <option>Não</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Licitações *</label>
+      <select required class="border p-2 rounded w-full">
+        <option value="">Selecione</option>
+        <option>Sim</option>
+        <option>Não</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Endereço -->
+  <div class="mt-6">
+    <label class="block font-semibold mb-1">Endereço Completo *</label>
+    <input required class="border p-2 rounded w-full">
+  </div>
+
+  <!-- Atividades -->
+  <div class="mt-6">
+    <label class="block font-semibold mb-1">Atividades Desenvolvidas *</label>
+    <textarea required class="border p-2 rounded w-full"></textarea>
+  </div>
+
+  <!-- CNAEs -->
+  <div class="grid grid-cols-2 gap-6 mt-6">
+
+    <div>
+      <label class="block font-semibold mb-1">CNAE Principal *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">CNAEs Secundários</label>
+      <input class="border p-2 rounded w-full">
+    </div>
+
+  </div>
+
+  <!-- Contato -->
+  <div class="grid grid-cols-3 gap-6 mt-6">
+
+    <div>
+      <label class="block font-semibold mb-1">Responsável RFB *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Telefone *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">E-mail *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
+
+  </div>
+
+  <!-- Financeiro -->
+  <div class="grid grid-cols-3 gap-6 mt-6">
+
+    <div>
+      <label class="block font-semibold mb-1">Honorário *</label>
+      <input required oninput="formatarMoeda(this)"
+        class="border p-2 rounded w-full">
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Vencimento *</label>
+      <select required class="border p-2 rounded w-full">
+        <option value="">Selecione</option>
+        <option>06</option>
+        <option>10</option>
+        <option>20</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Usuário Externo *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
+
+  </div>
+
+</div>
 
     <!-- BLOCO ADVOGADO (CONDICIONAL) -->
     <div id="blocoAdvogado" class="col-span-2 grid grid-cols-3 gap-4" style="display:none;">
@@ -308,7 +446,6 @@ function toggleGov(id, valor) {
   const campo = document.getElementById("senhaGov" + id);
   campo.style.display = valor === "Sim" ? "block" : "none";
 }
-</script>
 function toggleAdvogado() {
   const natureza = document.getElementById("naturezaJuridica").value;
   const bloco = document.getElementById("blocoAdvogado");
@@ -326,8 +463,5 @@ function toggleAdvogado() {
     advogado.required = false;
     cpf.required = false;
     oab.required = false;
-    advogado.value = "";
-    cpf.value = "";
-    oab.value = "";
   }
 }
