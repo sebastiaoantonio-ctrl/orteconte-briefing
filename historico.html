@@ -9,6 +9,7 @@
 
 <div class="flex">
 
+  <!-- MENU -->
   <div class="w-64 bg-blue-900 text-white min-h-screen p-5">
     <h2 class="text-xl font-bold mb-6">Orteconte</h2>
     <ul>
@@ -19,8 +20,9 @@
     </ul>
   </div>
 
+  <!-- CONTEÚDO -->
   <div class="flex-1 p-10">
-    <h1 class="text-3xl font-bold mb-6">Histórico de Briefings</h1>
+    <h1 id="titulo" class="text-3xl font-bold mb-6">Histórico de Briefings</h1>
 
     <div class="bg-white p-6 rounded-xl shadow">
       <table class="w-full border-collapse">
@@ -43,13 +45,17 @@
 
 <script>
 const usuario = JSON.parse(localStorage.getItem("usuario"));
-if (!usuario) {
-  window.location.href = "index.html";
-}
+if (!usuario) window.location.href = "index.html";
 
 function logout() {
   localStorage.removeItem("usuario");
   window.location.href = "index.html";
+}
+
+// 🔎 Captura parâmetro da URL
+function obterParametro(nome) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(nome);
 }
 
 async function atualizarStatus(id, novoStatus) {
@@ -67,7 +73,17 @@ async function atualizarStatus(id, novoStatus) {
 }
 
 async function carregarHistorico() {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/briefings?select=*&order=criado_em.desc`, {
+
+  const statusFiltro = obterParametro("status");
+
+  let url = `${SUPABASE_URL}/rest/v1/briefings?select=*&order=criado_em.desc`;
+
+  if (statusFiltro) {
+    url = `${SUPABASE_URL}/rest/v1/briefings?status=eq.${encodeURIComponent(statusFiltro)}&order=criado_em.desc`;
+    document.getElementById("titulo").innerText = `Histórico - ${statusFiltro}`;
+  }
+
+  const response = await fetch(url, {
     headers: {
       "apikey": SUPABASE_KEY,
       "Authorization": `Bearer ${SUPABASE_KEY}`
@@ -78,6 +94,17 @@ async function carregarHistorico() {
 
   const tabela = document.getElementById("tabela");
   tabela.innerHTML = "";
+
+  if (data.length === 0) {
+    tabela.innerHTML = `
+      <tr>
+        <td colspan="4" class="p-4 text-center text-gray-500">
+          Nenhum registro encontrado.
+        </td>
+      </tr>
+    `;
+    return;
+  }
 
   data.forEach(item => {
     tabela.innerHTML += `
