@@ -2,190 +2,190 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Novo Briefing</title>
+  <title>Abertura de Empresa</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
 <div class="flex">
 
+  <!-- MENU -->
   <div class="w-64 bg-blue-900 text-white min-h-screen p-5">
     <h2 class="text-xl font-bold mb-6">Orteconte</h2>
     <ul>
       <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
       <li class="mb-3 font-bold">Novo Briefing</li>
       <li class="mb-3"><a href="historico.html">Histórico</a></li>
-      <li class="mt-6"><button onclick="logout()" class="text-red-300">Sair</button></li>
     </ul>
   </div>
 
   <div class="flex-1 p-10">
-    <h1 class="text-3xl font-bold mb-6">Novo Briefing</h1>
+    <h1 class="text-3xl font-bold mb-8">BRIEFING SOCIETÁRIO - ABERTURA</h1>
 
-    <div class="bg-white p-6 rounded-xl shadow">
+    <form class="space-y-10">
 
-      <!-- DADOS BÁSICOS -->
-      <select id="tipo" onchange="gerarCampos()"
-        class="w-full mb-4 p-2 border rounded-lg">
-        <option value="">Selecione o tipo</option>
-        <option>Abertura</option>
-        <option>Alteração</option>
-        <option>Baixa</option>
-      </select>
+      <!-- ================= DADOS INICIAIS ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados Iniciais</h2>
 
-      <input id="empresa" placeholder="Empresa"
-        class="w-full mb-4 p-2 border rounded-lg">
+        <div class="grid grid-cols-2 gap-4">
+          <input placeholder="Tipo de Processo" class="border p-2 rounded">
+          <input placeholder="Cliente" class="border p-2 rounded">
+          <input placeholder="Valor" class="border p-2 rounded">
+          <input placeholder="Forma de Pagamento" class="border p-2 rounded">
+          <input placeholder="Caso Boleto - Vencimento" class="border p-2 rounded">
+        </div>
+      </div>
 
-      <input id="cpf_cnpj" placeholder="CPF/CNPJ"
-        class="w-full mb-4 p-2 border rounded-lg">
+      <!-- ================= DADOS DA EMPRESA ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados da Empresa</h2>
 
-      <!-- CAMPOS DINÂMICOS -->
-      <div id="camposDinamicos"></div>
+        <div class="grid grid-cols-2 gap-4">
 
-      <button onclick="salvarBriefing()"
-        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 mt-4">
-        Salvar
+          <input placeholder="Razão Social" class="border p-2 rounded">
+          <input placeholder="Grupo" class="border p-2 rounded">
+
+          <input placeholder="Nome Fantasia" class="border p-2 rounded">
+          <input placeholder="Enquadramento" class="border p-2 rounded">
+
+          <input placeholder="Advogado" class="border p-2 rounded">
+          <input placeholder="CPF Advogado" class="border p-2 rounded">
+          <input placeholder="OAB" class="border p-2 rounded">
+
+          <!-- Natureza Jurídica -->
+          <select class="border p-2 rounded">
+            <option>Natureza Jurídica</option>
+            <option>Empresário Individual</option>
+            <option>LTDA</option>
+            <option>SLU</option>
+            <option>EIRELI</option>
+            <option>Sociedade Simples</option>
+            <option>MEI</option>
+          </select>
+
+          <!-- Regime Tributário -->
+          <select class="border p-2 rounded">
+            <option>Regime Tributário</option>
+            <option>Simples Nacional</option>
+            <option>Lucro Presumido</option>
+            <option>Lucro Real</option>
+            <option>Isento</option>
+          </select>
+
+        </div>
+
+        <h3 class="font-semibold mt-6 mb-2">Forma de Atuação</h3>
+
+        <div class="grid grid-cols-3 gap-2 text-sm">
+          <label><input type="checkbox"> Estabelecimento Fixo</label>
+          <label><input type="checkbox"> Televendas</label>
+          <label><input type="checkbox"> Local Fixo Fora da Loja</label>
+          <label><input type="checkbox"> Internet</label>
+          <label><input type="checkbox"> Correios</label>
+          <label><input type="checkbox"> Porta a Porta / Postos Móveis</label>
+          <label><input type="checkbox"> Máquinas Automáticas</label>
+          <label><input type="checkbox"> Atividades Fora do Estabelecimento</label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <input placeholder="Alvará" class="border p-2 rounded">
+          <input placeholder="Licitações" class="border p-2 rounded">
+          <input placeholder="Endereço Completo" class="border p-2 rounded col-span-2">
+        </div>
+
+        <textarea placeholder="Atividades Desenvolvidas"
+          class="border p-2 rounded w-full mt-4"></textarea>
+
+        <div class="grid grid-cols-2 gap-4 mt-4">
+          <input placeholder="CNAE Principal" class="border p-2 rounded">
+          <input placeholder="CNAEs Secundários" class="border p-2 rounded">
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mt-4">
+          <input placeholder="Responsável RFB" class="border p-2 rounded">
+          <input placeholder="Telefone" class="border p-2 rounded">
+          <input placeholder="E-mail" class="border p-2 rounded">
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mt-4">
+          <input placeholder="Honorário" class="border p-2 rounded">
+          <input placeholder="Vencimento" class="border p-2 rounded">
+          <input placeholder="Usuário Externo" class="border p-2 rounded">
+        </div>
+
+      </div>
+
+      <!-- ================= DADOS DOS SÓCIOS ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+
+        <div id="sociosContainer"></div>
+
+        <button type="button"
+          onclick="adicionarSocio()"
+          class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
+          + Adicionar Sócio
+        </button>
+      </div>
+
+      <!-- ================= CHECKLIST ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
+
+        <div class="space-y-2">
+          <label><input type="checkbox"> CNH dos Sócios</label><br>
+          <label><input type="checkbox"> IPTU do Imóvel</label><br>
+          <label><input type="checkbox"> Contrato de Locação</label><br>
+          <label><input type="checkbox"> Certificado Digital</label>
+        </div>
+
+        <textarea placeholder="Observações"
+          class="border p-2 rounded w-full mt-4"></textarea>
+      </div>
+
+      <button type="submit"
+        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+        Salvar Briefing
       </button>
 
-      <p id="msg" class="mt-4 text-green-600"></p>
-
-    </div>
+    </form>
   </div>
 
 </div>
 
-<script src="js/config.js"></script>
-
 <script>
-function logout() {
-  localStorage.removeItem("usuario");
-  window.location.href = "index.html";
-}
+let contadorSocios = 0;
 
-function gerarCampos() {
+function adicionarSocio() {
 
-  const tipo = document.getElementById("tipo").value;
-  const container = document.getElementById("camposDinamicos");
-  container.innerHTML = "";
+  contadorSocios++;
 
-  if (tipo === "Abertura") {
-    container.innerHTML = `
-      <label class="block font-semibold mb-1">Natureza Jurídica</label>
-      <select id="natureza"
-        class="w-full mb-3 p-2 border rounded-lg">
-        <option value="">Selecione</option>
-        <option>Empresário Individual</option>
-        <option>Sociedade Limitada (LTDA)</option>
-        <option>Sociedade Limitada Unipessoal (SLU)</option>
-        <option>EIRELI</option>
-        <option>Sociedade Simples</option>
-        <option>MEI</option>
-      </select>
+  const container = document.getElementById("sociosContainer");
 
-      <input id="capital" placeholder="Capital Social"
-        class="w-full mb-3 p-2 border rounded-lg">
+  container.innerHTML += `
+    <div class="border p-4 rounded-lg mb-4 bg-gray-50">
+      <h3 class="font-semibold mb-2">Sócio ${contadorSocios}</h3>
 
-      <input id="endereco" placeholder="Endereço Completo"
-        class="w-full mb-3 p-2 border rounded-lg">
-
-      <input id="cnae_principal" placeholder="CNAE Principal"
-        class="w-full mb-3 p-2 border rounded-lg">
-
-      <label class="block font-semibold mb-1">Regime Tributário</label>
-      <select id="regime"
-        class="w-full mb-3 p-2 border rounded-lg">
-        <option value="">Selecione</option>
-        <option>Simples Nacional</option>
-        <option>Lucro Presumido</option>
-        <option>Lucro Real</option>
-        <option>Isento</option>
-      </select>
-    `;
-  }
-
-  if (tipo === "Alteração") {
-    container.innerHTML = `
-      <input id="tipo_alteracao" placeholder="Tipo de Alteração"
-        class="w-full mb-3 p-2 border rounded-lg">
-
-      <textarea id="descricao"
-        placeholder="Descrição da Alteração"
-        class="w-full mb-3 p-2 border rounded-lg"></textarea>
-    `;
-  }
-
-  if (tipo === "Baixa") {
-    container.innerHTML = `
-      <input id="motivo_baixa" placeholder="Motivo da Baixa"
-        class="w-full mb-3 p-2 border rounded-lg">
-
-      <input id="data_baixa" type="date"
-        class="w-full mb-3 p-2 border rounded-lg">
-    `;
-  }
-}
-
-async function salvarBriefing() {
-
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
-  if (!usuario) {
-    window.location.href = "index.html";
-    return;
-  }
-
-  const tipo = document.getElementById("tipo").value;
-  const empresa = document.getElementById("empresa").value;
-  const cpf_cnpj = document.getElementById("cpf_cnpj").value;
-
-  let dados = {};
-
-  if (tipo === "Abertura") {
-    dados = {
-      natureza: document.getElementById("natureza").value,
-      capital: document.getElementById("capital").value,
-      endereco: document.getElementById("endereco").value,
-      cnae_principal: document.getElementById("cnae_principal").value,
-      regime: document.getElementById("regime").value
-    };
-  }
-
-  if (tipo === "Alteração") {
-    dados = {
-      tipo_alteracao: document.getElementById("tipo_alteracao").value,
-      descricao: document.getElementById("descricao").value
-    };
-  }
-
-  if (tipo === "Baixa") {
-    dados = {
-      motivo_baixa: document.getElementById("motivo_baixa").value,
-      data_baixa: document.getElementById("data_baixa").value
-    };
-  }
-
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/briefings`, {
-    method: "POST",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": "application/json",
-      "Prefer": "return=minimal"
-    },
-    body: JSON.stringify({
-      tipo,
-      empresa,
-      cpf_cnpj,
-      usuario_id: usuario.id,
-      status: "Pendente",
-      dados_json: dados
-    })
-  });
-
-  if (response.ok) {
-    document.getElementById("msg").innerText = "Briefing salvo com sucesso!";
-  } else {
-    document.getElementById("msg").innerText = "Erro ao salvar.";
-  }
+      <div class="grid grid-cols-2 gap-4">
+        <input placeholder="Nome" class="border p-2 rounded">
+        <input placeholder="Quotas (R$)" class="border p-2 rounded">
+        <input placeholder="Endereço" class="border p-2 rounded">
+        <input placeholder="Status" class="border p-2 rounded">
+        <input placeholder="Estado Civil" class="border p-2 rounded">
+        <input placeholder="Profissão" class="border p-2 rounded">
+        <input placeholder="Telefone" class="border p-2 rounded">
+        <input placeholder="E-mail" class="border p-2 rounded">
+        <input placeholder="Responsável RFB" class="border p-2 rounded">
+        <input placeholder="Administrador" class="border p-2 rounded">
+        <input placeholder="Pró-labore" class="border p-2 rounded">
+        <input placeholder="Valor Pró-labore" class="border p-2 rounded">
+        <input placeholder="Certificado Digital" class="border p-2 rounded">
+        <input placeholder="Acesso Gov.br" class="border p-2 rounded">
+        <input placeholder="Senha Gov.br" class="border p-2 rounded">
+      </div>
+    </div>
+  `;
 }
 </script>
 
