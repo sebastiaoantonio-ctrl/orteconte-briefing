@@ -30,13 +30,40 @@
 
   <!-- CONTEÚDO -->
   <div class="flex-1 p-10">
-    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+    <h1 class="text-3xl font-bold mb-8">Dashboard</h1>
 
-    <div class="bg-white p-6 rounded-xl shadow">
-      <p class="text-lg">
-        Total de Briefings: 
-        <strong id="total">0</strong>
-      </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- TOTAL -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Total de Briefings</p>
+        <h2 id="total" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+
+      <!-- ABERTURA -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Abertura</p>
+        <h2 id="abertura" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+
+      <!-- ALTERAÇÃO -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Alteração</p>
+        <h2 id="alteracao" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+
+      <!-- BAIXA -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Baixa</p>
+        <h2 id="baixa" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+
+      <!-- PORTABILIDADE -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Portabilidades</p>
+        <h2 id="portabilidade" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+
     </div>
 
   </div>
@@ -46,7 +73,6 @@
 <script src="js/config.js"></script>
 
 <script>
-  // Verifica se usuário está logado
   const usuario = JSON.parse(localStorage.getItem("usuario"));
   if (!usuario) {
     window.location.href = "index.html";
@@ -66,7 +92,25 @@
     });
 
     const data = await response.json();
-    document.getElementById("total").innerText = data.length;
+
+    let total = data.length;
+    let abertura = 0;
+    let alteracao = 0;
+    let baixa = 0;
+    let portabilidade = 0;
+
+    data.forEach(item => {
+      if (item.tipo === "Abertura") abertura++;
+      else if (item.tipo === "Alteração") alteracao++;
+      else if (item.tipo === "Baixa") baixa++;
+      else portabilidade++;
+    });
+
+    document.getElementById("total").innerText = total;
+    document.getElementById("abertura").innerText = abertura;
+    document.getElementById("alteracao").innerText = alteracao;
+    document.getElementById("baixa").innerText = baixa;
+    document.getElementById("portabilidade").innerText = portabilidade;
   }
 
   carregarResumo();
