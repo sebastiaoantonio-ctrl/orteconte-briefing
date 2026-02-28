@@ -70,8 +70,17 @@ function gerarCampos() {
 
   if (tipo === "Abertura") {
     container.innerHTML = `
-      <input id="natureza" placeholder="Natureza Jurídica"
+      <label class="block font-semibold mb-1">Natureza Jurídica</label>
+      <select id="natureza"
         class="w-full mb-3 p-2 border rounded-lg">
+        <option value="">Selecione</option>
+        <option>Empresário Individual</option>
+        <option>Sociedade Limitada (LTDA)</option>
+        <option>Sociedade Limitada Unipessoal (SLU)</option>
+        <option>EIRELI</option>
+        <option>Sociedade Simples</option>
+        <option>MEI</option>
+      </select>
 
       <input id="capital" placeholder="Capital Social"
         class="w-full mb-3 p-2 border rounded-lg">
@@ -82,8 +91,15 @@ function gerarCampos() {
       <input id="cnae_principal" placeholder="CNAE Principal"
         class="w-full mb-3 p-2 border rounded-lg">
 
-      <input id="regime" placeholder="Regime Tributário"
+      <label class="block font-semibold mb-1">Regime Tributário</label>
+      <select id="regime"
         class="w-full mb-3 p-2 border rounded-lg">
+        <option value="">Selecione</option>
+        <option>Simples Nacional</option>
+        <option>Lucro Presumido</option>
+        <option>Lucro Real</option>
+        <option>Isento</option>
+      </select>
     `;
   }
 
