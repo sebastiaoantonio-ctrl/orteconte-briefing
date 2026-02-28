@@ -200,65 +200,101 @@ function formatarMoeda(campo) {
 function adicionarSocio() {
 
   contadorSocios++;
-
+  const id = contadorSocios;
   const container = document.getElementById("sociosContainer");
 
   container.innerHTML += `
     <div class="border p-4 rounded-lg mb-4 bg-gray-50">
-      <h3 class="font-semibold mb-3 text-blue-800">Sócio ${contadorSocios}</h3>
+      <h3 class="font-semibold mb-3 text-blue-800">Sócio ${id}</h3>
 
       <div class="grid grid-cols-2 gap-4">
 
-        <input placeholder="Nome"
-          class="border p-2 rounded">
+        <input placeholder="Nome" class="border p-2 rounded">
+        <input placeholder="Quotas (R$)" class="border p-2 rounded">
+        <input placeholder="Endereço" class="border p-2 rounded">
+        <input placeholder="Status" class="border p-2 rounded">
+        <input placeholder="Estado Civil" class="border p-2 rounded">
+        <input placeholder="Profissão" class="border p-2 rounded">
+        <input placeholder="Telefone" class="border p-2 rounded">
+        <input placeholder="E-mail" class="border p-2 rounded">
 
-        <input placeholder="Quotas (R$)"
-          class="border p-2 rounded">
+        <!-- Responsável RFB -->
+        <div>
+          <label class="block text-sm font-semibold">Responsável RFB</label>
+          <select class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
 
-        <input placeholder="Endereço"
-          class="border p-2 rounded">
+        <!-- Administrador -->
+        <div>
+          <label class="block text-sm font-semibold">Administrador</label>
+          <select class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
 
-        <input placeholder="Status"
-          class="border p-2 rounded">
+        <!-- Pró-labore -->
+        <div>
+          <label class="block text-sm font-semibold">Pró-labore</label>
+          <select onchange="toggleProlabore(${id}, this.value)"
+            class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
 
-        <input placeholder="Estado Civil"
-          class="border p-2 rounded">
+        <!-- Valor Pró-labore -->
+        <div id="valorProlabore${id}" style="display:none;">
+          <label class="block text-sm font-semibold">Valor Pró-labore</label>
+          <input oninput="formatarMoeda(this)"
+            class="border p-2 rounded w-full">
+        </div>
 
-        <input placeholder="Profissão"
-          class="border p-2 rounded">
+        <!-- Certificado Digital -->
+        <div>
+          <label class="block text-sm font-semibold">Certificado Digital</label>
+          <select class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
 
-        <input placeholder="Telefone"
-          class="border p-2 rounded">
+        <!-- Acesso Gov.br -->
+        <div>
+          <label class="block text-sm font-semibold">Acesso Gov.br</label>
+          <select onchange="toggleGov(${id}, this.value)"
+            class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
 
-        <input placeholder="E-mail"
-          class="border p-2 rounded">
-
-        <input placeholder="Responsável RFB"
-          class="border p-2 rounded">
-
-        <label class="flex items-center gap-2">
-          <input type="checkbox">
-          Administrador
-        </label>
-
-        <input placeholder="Pró-labore"
-          class="border p-2 rounded">
-
-        <input placeholder="Valor Pró-labore"
-          oninput="formatarMoeda(this)"
-          class="border p-2 rounded">
-
-        <input placeholder="Certificado Digital"
-          class="border p-2 rounded">
-
-        <input placeholder="Acesso Gov.br"
-          class="border p-2 rounded">
-
-        <input placeholder="Senha Gov.br"
-          class="border p-2 rounded">
+        <!-- Senha Gov -->
+        <div id="senhaGov${id}" style="display:none;">
+          <label class="block text-sm font-semibold">Senha Gov.br</label>
+          <input class="border p-2 rounded w-full">
+        </div>
 
       </div>
     </div>
   `;
+}
+
+function toggleProlabore(id, valor) {
+  const campo = document.getElementById("valorProlabore" + id);
+  campo.style.display = valor === "Sim" ? "block" : "none";
+}
+
+function toggleGov(id, valor) {
+  const campo = document.getElementById("senhaGov" + id);
+  campo.style.display = valor === "Sim" ? "block" : "none";
 }
 </script>
