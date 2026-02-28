@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Histórico - Orteconte</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex">
+
+  <!-- MENU -->
+  <div class="w-64 bg-blue-900 text-white min-h-screen p-5">
+    <h2 class="text-xl font-bold mb-6">Orteconte</h2>
+    <ul>
+      <li class="mb-3"><a href="painel.html">Dashboard</a></li>
+      <li class="mb-3"><a href="novo.html">Novo Briefing</a></li>
+      <li class="mb-3 font-bold">Histórico</li>
+      <li class="mt-6"><button onclick="logout()" class="text-red-300">Sair</button></li>
+    </ul>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="flex-1 p-10">
+    <h1 class="text-3xl font-bold mb-6">Histórico de Briefings</h1>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b">
+            <th class="text-left p-2">Tipo</th>
+            <th class="text-left p-2">Empresa</th>
+            <th class="text-left p-2">CPF/CNPJ</th>
+            <th class="text-left p-2">Data</th>
+          </tr>
+        </thead>
+        <tbody id="tabela"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/config.js"></script>
+
+<script>
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+  if (!usuario) {
+    window.location.href = "index.html";
+  }
+
+  function logout() {
+    localStorage.removeItem("usuario");
+    window.location.href = "index.html";
+  }
+
+  async function carregarHistorico() {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/briefings?select=*&order=criado_em.desc`, {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    const data = await response.json();
+
+    const tabela = document.getElementById("tabela");
+    tabela.innerHTML = "";
+
+    data.forEach(item => {
+      tabela.innerHTML += `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-2">${item.tipo}</td>
+          <td class="p-2">${item.empresa}</td>
+          <td class="p-2">${item.cpf_cnpj}</td>
+          <td class="p-2">${new Date(item.criado_em).toLocaleString()}</td>
+        </tr>
+      `;
+    });
+  }
+
+  carregarHistorico();
+</script>
+
+</body>
+</html>
