@@ -32,19 +32,18 @@
 
           <div>
             <label class="block font-semibold mb-1">Cliente *</label>
-            <input id="cliente" required
-              class="border p-2 rounded w-full">
+            <input required class="border p-2 rounded w-full">
           </div>
 
           <div>
             <label class="block font-semibold mb-1">Valor *</label>
-            <input id="valor" required
-              class="border p-2 rounded w-full">
+            <input required class="border p-2 rounded w-full">
           </div>
 
           <div>
             <label class="block font-semibold mb-1">Forma de Pagamento *</label>
-            <select id="formaPagamento" required
+            <select id="formaPagamento"
+              required
               onchange="verificarPagamento()"
               class="border p-2 rounded w-full">
               <option value="">Selecione</option>
@@ -64,16 +63,109 @@
         </div>
       </div>
 
-      <!-- BOTÃO SALVAR -->
+      <!-- ================= DADOS DA EMPRESA ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-6">Dados da Empresa</h2>
+
+        <div class="grid grid-cols-2 gap-6">
+
+          <div>
+            <label class="block font-semibold mb-1">Razão Social</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Grupo</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Nome Fantasia</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Enquadramento</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Advogado</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">CPF Advogado</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">OAB</label>
+            <input class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Natureza Jurídica</label>
+            <select class="border p-2 rounded w-full">
+              <option>Selecione</option>
+              <option>Empresário Individual</option>
+              <option>LTDA</option>
+              <option>SLU</option>
+              <option>EIRELI</option>
+              <option>Sociedade Simples</option>
+              <option>MEI</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Regime Tributário</label>
+            <select class="border p-2 rounded w-full">
+              <option>Selecione</option>
+              <option>Simples Nacional</option>
+              <option>Lucro Presumido</option>
+              <option>Lucro Real</option>
+              <option>Isento</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= DADOS DOS SÓCIOS ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+        <div id="sociosContainer"></div>
+
+        <button type="button"
+          onclick="adicionarSocio()"
+          class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
+          + Adicionar Sócio
+        </button>
+      </div>
+
+      <!-- ================= CHECKLIST ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
+
+        <label><input type="checkbox"> CNH dos Sócios</label><br>
+        <label><input type="checkbox"> IPTU do Imóvel</label><br>
+        <label><input type="checkbox"> Contrato de Locação</label><br>
+        <label><input type="checkbox"> Certificado Digital</label>
+
+        <div class="mt-4">
+          <label class="block font-semibold mb-1">Observações</label>
+          <textarea class="border p-2 rounded w-full"></textarea>
+        </div>
+      </div>
+
       <button type="submit"
         class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
         Salvar Briefing
       </button>
 
     </form>
-
   </div>
-
 </div>
 
 <script>
@@ -92,17 +184,22 @@ function verificarPagamento() {
   }
 }
 
-document.getElementById("formAbertura")
-.addEventListener("submit", function(e) {
+let contadorSocios = 0;
 
-  const forma = document.getElementById("formaPagamento").value;
-  const vencimento = document.getElementById("vencimento").value;
+function adicionarSocio() {
+  contadorSocios++;
 
-  if (forma === "Boleto" && !vencimento) {
-    alert("Informe o vencimento para pagamento via boleto.");
-    e.preventDefault();
-  }
-});
+  document.getElementById("sociosContainer").innerHTML += `
+    <div class="border p-4 rounded-lg mb-4 bg-gray-50">
+      <h3 class="font-semibold mb-2">Sócio ${contadorSocios}</h3>
+      <input placeholder="Nome" class="border p-2 rounded w-full mb-2">
+      <input placeholder="Quotas (R$)" class="border p-2 rounded w-full mb-2">
+      <label class="flex items-center gap-2">
+        <input type="checkbox"> Administrador
+      </label>
+    </div>
+  `;
+}
 </script>
 
 </body>
