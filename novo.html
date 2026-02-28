@@ -157,6 +157,14 @@
 <script>
 let contadorSocios = 0;
 
+function formatarMoeda(campo) {
+  let valor = campo.value.replace(/\D/g, "");
+  valor = (valor / 100).toFixed(2) + "";
+  valor = valor.replace(".", ",");
+  valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  campo.value = "R$ " + valor;
+}
+
 function adicionarSocio() {
 
   contadorSocios++;
@@ -165,29 +173,60 @@ function adicionarSocio() {
 
   container.innerHTML += `
     <div class="border p-4 rounded-lg mb-4 bg-gray-50">
-      <h3 class="font-semibold mb-2">Sócio ${contadorSocios}</h3>
+      <h3 class="font-semibold mb-3 text-blue-800">Sócio ${contadorSocios}</h3>
 
       <div class="grid grid-cols-2 gap-4">
-        <input placeholder="Nome" class="border p-2 rounded">
-        <input placeholder="Quotas (R$)" class="border p-2 rounded">
-        <input placeholder="Endereço" class="border p-2 rounded">
-        <input placeholder="Status" class="border p-2 rounded">
-        <input placeholder="Estado Civil" class="border p-2 rounded">
-        <input placeholder="Profissão" class="border p-2 rounded">
-        <input placeholder="Telefone" class="border p-2 rounded">
-        <input placeholder="E-mail" class="border p-2 rounded">
-        <input placeholder="Responsável RFB" class="border p-2 rounded">
-        <input placeholder="Administrador" class="border p-2 rounded">
-        <input placeholder="Pró-labore" class="border p-2 rounded">
-        <input placeholder="Valor Pró-labore" class="border p-2 rounded">
-        <input placeholder="Certificado Digital" class="border p-2 rounded">
-        <input placeholder="Acesso Gov.br" class="border p-2 rounded">
-        <input placeholder="Senha Gov.br" class="border p-2 rounded">
+
+        <input placeholder="Nome"
+          class="border p-2 rounded">
+
+        <input placeholder="Quotas (R$)"
+          class="border p-2 rounded">
+
+        <input placeholder="Endereço"
+          class="border p-2 rounded">
+
+        <input placeholder="Status"
+          class="border p-2 rounded">
+
+        <input placeholder="Estado Civil"
+          class="border p-2 rounded">
+
+        <input placeholder="Profissão"
+          class="border p-2 rounded">
+
+        <input placeholder="Telefone"
+          class="border p-2 rounded">
+
+        <input placeholder="E-mail"
+          class="border p-2 rounded">
+
+        <input placeholder="Responsável RFB"
+          class="border p-2 rounded">
+
+        <label class="flex items-center gap-2">
+          <input type="checkbox">
+          Administrador
+        </label>
+
+        <input placeholder="Pró-labore"
+          class="border p-2 rounded">
+
+        <input placeholder="Valor Pró-labore"
+          oninput="formatarMoeda(this)"
+          class="border p-2 rounded">
+
+        <input placeholder="Certificado Digital"
+          class="border p-2 rounded">
+
+        <input placeholder="Acesso Gov.br"
+          class="border p-2 rounded">
+
+        <input placeholder="Senha Gov.br"
+          class="border p-2 rounded">
+
       </div>
     </div>
   `;
 }
 </script>
-
-</body>
-</html>
