@@ -62,76 +62,87 @@
         </div>
       </div>
 
-      <!-- ================= DADOS DA EMPRESA ================= -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-4">Dados da Empresa</h2>
+     <!-- ================= DADOS DA EMPRESA ================= -->
+<div class="bg-white p-6 rounded-xl shadow">
+  <h2 class="text-xl font-bold mb-4">Dados da Empresa</h2>
 
-        <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-2 gap-4">
 
-          <div>
-            <label class="block font-semibold mb-1">Razão Social</label>
-            <input required class="border p-2 rounded w-full">
-          </div>
+    <div>
+      <label class="block font-semibold mb-1">Razão Social *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
 
-          <div>
-            <label class="block font-semibold mb-1">Grupo</label>
-            <input class="border p-2 rounded w-full">
-          </div>
+    <div>
+      <label class="block font-semibold mb-1">Grupo</label>
+      <input class="border p-2 rounded w-full">
+    </div>
 
-          <div>
-            <label class="block font-semibold mb-1">Nome Fantasia</label>
-            <input class="border p-2 rounded w-full">
-          </div>
+    <div>
+      <label class="block font-semibold mb-1">Nome Fantasia *</label>
+      <input required class="border p-2 rounded w-full">
+    </div>
 
-          <div>
-            <label class="block font-semibold mb-1">Enquadramento</label>
-            <input class="border p-2 rounded w-full">
-          </div>
+    <div>
+      <label class="block font-semibold mb-1">Enquadramento *</label>
+      <select required class="border p-2 rounded w-full">
+        <option value="">Selecione</option>
+        <option>MEI</option>
+        <option>ME</option>
+        <option>EPP</option>
+        <option>DEMAIS</option>
+      </select>
+    </div>
 
-          <div>
-            <label class="block font-semibold mb-1">Advogado</label>
-            <input class="border p-2 rounded w-full">
-          </div>
+    <!-- Natureza Jurídica -->
+    <div>
+      <label class="block font-semibold mb-1">Natureza Jurídica *</label>
+      <select id="naturezaJuridica"
+        required
+        onchange="toggleAdvogado()"
+        class="border p-2 rounded w-full">
+        <option value="">Selecione</option>
+        <option>Sociedade Limitada (LTDA)</option>
+        <option>Sociedade Limitada Unipessoal (SLU)</option>
+        <option>Microempreendedor Individual (MEI)</option>
+        <option>Sociedade Anônima (S/A)</option>
+      </select>
+    </div>
 
-          <div>
-            <label class="block font-semibold mb-1">CPF Advogado</label>
-            <input class="border p-2 rounded w-full">
-          </div>
+    <!-- Regime Tributário -->
+    <div>
+      <label class="block font-semibold mb-1">Regime Tributário *</label>
+      <select required class="border p-2 rounded w-full">
+        <option value="">Selecione</option>
+        <option>Simples Nacional</option>
+        <option>Lucro Presumido</option>
+        <option>Lucro Real</option>
+        <option>Isento</option>
+      </select>
+    </div>
 
-          <div>
-            <label class="block font-semibold mb-1">OAB</label>
-            <input class="border p-2 rounded w-full">
-          </div>
+    <!-- BLOCO ADVOGADO (CONDICIONAL) -->
+    <div id="blocoAdvogado" class="col-span-2 grid grid-cols-3 gap-4" style="display:none;">
 
-          <div>
-            <label class="block font-semibold mb-1">Natureza Jurídica</label>
-            <select class="border p-2 rounded w-full">
-              <option>Selecione</option>
-              <option>Empresário Individual</option>
-              <option>LTDA</option>
-              <option>SLU</option>
-              <option>EIRELI</option>
-              <option>Sociedade Simples</option>
-              <option>MEI</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Regime Tributário</label>
-            <select class="border p-2 rounded w-full">
-              <option>Selecione</option>
-              <option>Simples Nacional</option>
-              <option>Lucro Presumido</option>
-              <option>Lucro Real</option>
-              <option>Isento</option>
-            </select>
-          </div>
-
-        </div>
-
-        <!-- restante do formulário permanece exatamente igual -->
-
+      <div>
+        <label class="block font-semibold mb-1">Advogado *</label>
+        <input id="advogado" class="border p-2 rounded w-full">
       </div>
+
+      <div>
+        <label class="block font-semibold mb-1">CPF Advogado *</label>
+        <input id="cpfAdvogado" class="border p-2 rounded w-full">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">OAB *</label>
+        <input id="oab" class="border p-2 rounded w-full">
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
       <!-- ================= DADOS DOS SÓCIOS ================= -->
       <div class="bg-white p-6 rounded-xl shadow">
@@ -298,3 +309,25 @@ function toggleGov(id, valor) {
   campo.style.display = valor === "Sim" ? "block" : "none";
 }
 </script>
+function toggleAdvogado() {
+  const natureza = document.getElementById("naturezaJuridica").value;
+  const bloco = document.getElementById("blocoAdvogado");
+  const advogado = document.getElementById("advogado");
+  const cpf = document.getElementById("cpfAdvogado");
+  const oab = document.getElementById("oab");
+
+  if (natureza === "Sociedade Anônima (S/A)") {
+    bloco.style.display = "grid";
+    advogado.required = true;
+    cpf.required = true;
+    oab.required = true;
+  } else {
+    bloco.style.display = "none";
+    advogado.required = false;
+    cpf.required = false;
+    oab.required = false;
+    advogado.value = "";
+    cpf.value = "";
+    oab.value = "";
+  }
+}
