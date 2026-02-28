@@ -14,7 +14,7 @@
     <h2 class="text-xl font-bold mb-6">Orteconte</h2>
     <ul>
       <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
-      <li class="mb-3"><a href="novo.html">Novo Briefing</a></li>
+      <li class="mb-3 font-bold">Novo Briefing</li>
       <li class="mb-3"><a href="historico.html">Histórico</a></li>
     </ul>
   </div>
@@ -22,7 +22,7 @@
   <div class="flex-1 p-10">
     <h1 class="text-3xl font-bold mb-8">BRIEFING SOCIETÁRIO - ABERTURA</h1>
 
-    <form id="formAbertura" class="space-y-10">
+    <form class="space-y-10">
 
       <!-- ================= DADOS INICIAIS ================= -->
       <div class="bg-white p-6 rounded-xl shadow">
@@ -42,8 +42,7 @@
 
           <div>
             <label class="block font-semibold mb-1">Forma de Pagamento *</label>
-            <select id="formaPagamento"
-              required
+            <select id="formaPagamento" required
               onchange="verificarPagamento()"
               class="border p-2 rounded w-full">
               <option value="">Selecione</option>
@@ -65,9 +64,9 @@
 
       <!-- ================= DADOS DA EMPRESA ================= -->
       <div class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-6">Dados da Empresa</h2>
+        <h2 class="text-xl font-bold mb-4">Dados da Empresa</h2>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-4">
 
           <div>
             <label class="block font-semibold mb-1">Razão Social</label>
@@ -130,11 +129,14 @@
 
         </div>
 
+        <!-- restante do formulário permanece exatamente igual -->
+
       </div>
 
       <!-- ================= DADOS DOS SÓCIOS ================= -->
       <div class="bg-white p-6 rounded-xl shadow">
         <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+
         <div id="sociosContainer"></div>
 
         <button type="button"
@@ -148,15 +150,15 @@
       <div class="bg-white p-6 rounded-xl shadow">
         <h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
 
-        <label><input type="checkbox"> CNH dos Sócios</label><br>
-        <label><input type="checkbox"> IPTU do Imóvel</label><br>
-        <label><input type="checkbox"> Contrato de Locação</label><br>
-        <label><input type="checkbox"> Certificado Digital</label>
-
-        <div class="mt-4">
-          <label class="block font-semibold mb-1">Observações</label>
-          <textarea class="border p-2 rounded w-full"></textarea>
+        <div class="space-y-2">
+          <label><input type="checkbox"> CNH dos Sócios</label><br>
+          <label><input type="checkbox"> IPTU do Imóvel</label><br>
+          <label><input type="checkbox"> Contrato de Locação</label><br>
+          <label><input type="checkbox"> Certificado Digital</label>
         </div>
+
+        <textarea placeholder="Observações"
+          class="border p-2 rounded w-full mt-4"></textarea>
       </div>
 
       <button type="submit"
@@ -166,6 +168,7 @@
 
     </form>
   </div>
+
 </div>
 
 <script>
@@ -183,24 +186,4 @@ function verificarPagamento() {
     vencimento.value = "";
   }
 }
-
-let contadorSocios = 0;
-
-function adicionarSocio() {
-  contadorSocios++;
-
-  document.getElementById("sociosContainer").innerHTML += `
-    <div class="border p-4 rounded-lg mb-4 bg-gray-50">
-      <h3 class="font-semibold mb-2">Sócio ${contadorSocios}</h3>
-      <input placeholder="Nome" class="border p-2 rounded w-full mb-2">
-      <input placeholder="Quotas (R$)" class="border p-2 rounded w-full mb-2">
-      <label class="flex items-center gap-2">
-        <input type="checkbox"> Administrador
-      </label>
-    </div>
-  `;
-}
 </script>
-
-</body>
-</html>
