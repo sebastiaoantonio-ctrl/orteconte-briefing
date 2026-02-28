@@ -14,8 +14,12 @@
     <h2 class="text-xl font-bold mb-6">Orteconte</h2>
     <ul>
       <li class="mb-3 font-bold">Dashboard</li>
-      <li class="mb-3"><a href="novo.html" class="hover:text-gray-300">Novo Briefing</a></li>
-      <li class="mb-3"><a href="#" class="hover:text-gray-300">Histórico</a></li>
+      <li class="mb-3">
+        <a href="novo.html" class="hover:text-gray-300">Novo Briefing</a>
+      </li>
+      <li class="mb-3">
+        <a href="historico.html" class="hover:text-gray-300">Histórico</a>
+      </li>
       <li class="mt-6">
         <button onclick="logout()" class="text-red-300 hover:text-red-400">
           Sair
@@ -29,10 +33,12 @@
     <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
 
     <div class="bg-white p-6 rounded-xl shadow">
-      <p>Total de Briefings: 
+      <p class="text-lg">
+        Total de Briefings: 
         <strong id="total">0</strong>
       </p>
     </div>
+
   </div>
 
 </div>
@@ -40,7 +46,7 @@
 <script src="js/config.js"></script>
 
 <script>
-  // Verifica login
+  // Verifica se usuário está logado
   const usuario = JSON.parse(localStorage.getItem("usuario"));
   if (!usuario) {
     window.location.href = "index.html";
