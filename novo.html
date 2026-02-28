@@ -9,7 +9,6 @@
 
 <div class="flex">
 
-  <!-- MENU -->
   <div class="w-64 bg-blue-900 text-white min-h-screen p-5">
     <h2 class="text-xl font-bold mb-6">Orteconte</h2>
     <ul>
@@ -25,15 +24,13 @@
 
     <div class="bg-white p-6 rounded-xl shadow">
 
-      <select id="tipo" class="w-full mb-4 p-2 border rounded-lg">
+      <!-- DADOS BÁSICOS -->
+      <select id="tipo" onchange="gerarCampos()"
+        class="w-full mb-4 p-2 border rounded-lg">
         <option value="">Selecione o tipo</option>
         <option>Abertura</option>
         <option>Alteração</option>
         <option>Baixa</option>
-        <option>Portabilidade Entrada</option>
-        <option>Portabilidade Saída</option>
-        <option>Entrada Doméstica</option>
-        <option>Produtor Rural</option>
       </select>
 
       <input id="empresa" placeholder="Empresa"
@@ -42,11 +39,11 @@
       <input id="cpf_cnpj" placeholder="CPF/CNPJ"
         class="w-full mb-4 p-2 border rounded-lg">
 
-      <input id="grupo" placeholder="Grupo"
-        class="w-full mb-4 p-2 border rounded-lg">
+      <!-- CAMPOS DINÂMICOS -->
+      <div id="camposDinamicos"></div>
 
       <button onclick="salvarBriefing()"
-        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 mt-4">
         Salvar
       </button>
 
@@ -65,10 +62,56 @@ function logout() {
   window.location.href = "index.html";
 }
 
+function gerarCampos() {
+
+  const tipo = document.getElementById("tipo").value;
+  const container = document.getElementById("camposDinamicos");
+  container.innerHTML = "";
+
+  if (tipo === "Abertura") {
+    container.innerHTML = `
+      <input id="natureza" placeholder="Natureza Jurídica"
+        class="w-full mb-3 p-2 border rounded-lg">
+
+      <input id="capital" placeholder="Capital Social"
+        class="w-full mb-3 p-2 border rounded-lg">
+
+      <input id="endereco" placeholder="Endereço Completo"
+        class="w-full mb-3 p-2 border rounded-lg">
+
+      <input id="cnae_principal" placeholder="CNAE Principal"
+        class="w-full mb-3 p-2 border rounded-lg">
+
+      <input id="regime" placeholder="Regime Tributário"
+        class="w-full mb-3 p-2 border rounded-lg">
+    `;
+  }
+
+  if (tipo === "Alteração") {
+    container.innerHTML = `
+      <input id="tipo_alteracao" placeholder="Tipo de Alteração"
+        class="w-full mb-3 p-2 border rounded-lg">
+
+      <textarea id="descricao"
+        placeholder="Descrição da Alteração"
+        class="w-full mb-3 p-2 border rounded-lg"></textarea>
+    `;
+  }
+
+  if (tipo === "Baixa") {
+    container.innerHTML = `
+      <input id="motivo_baixa" placeholder="Motivo da Baixa"
+        class="w-full mb-3 p-2 border rounded-lg">
+
+      <input id="data_baixa" type="date"
+        class="w-full mb-3 p-2 border rounded-lg">
+    `;
+  }
+}
+
 async function salvarBriefing() {
 
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-
   if (!usuario) {
     window.location.href = "index.html";
     return;
@@ -77,7 +120,32 @@ async function salvarBriefing() {
   const tipo = document.getElementById("tipo").value;
   const empresa = document.getElementById("empresa").value;
   const cpf_cnpj = document.getElementById("cpf_cnpj").value;
-  const grupo = document.getElementById("grupo").value;
+
+  let dados = {};
+
+  if (tipo === "Abertura") {
+    dados = {
+      natureza: document.getElementById("natureza").value,
+      capital: document.getElementById("capital").value,
+      endereco: document.getElementById("endereco").value,
+      cnae_principal: document.getElementById("cnae_principal").value,
+      regime: document.getElementById("regime").value
+    };
+  }
+
+  if (tipo === "Alteração") {
+    dados = {
+      tipo_alteracao: document.getElementById("tipo_alteracao").value,
+      descricao: document.getElementById("descricao").value
+    };
+  }
+
+  if (tipo === "Baixa") {
+    dados = {
+      motivo_baixa: document.getElementById("motivo_baixa").value,
+      data_baixa: document.getElementById("data_baixa").value
+    };
+  }
 
   const response = await fetch(`${SUPABASE_URL}/rest/v1/briefings`, {
     method: "POST",
@@ -91,10 +159,9 @@ async function salvarBriefing() {
       tipo,
       empresa,
       cpf_cnpj,
-      grupo,
       usuario_id: usuario.id,
       status: "Pendente",
-      dados_json: {}
+      dados_json: dados
     })
   });
 
