@@ -243,6 +243,12 @@
     <div id="blocoAdvogado" class="col-span-2 grid grid-cols-3 gap-4" style="display:none;">
 
       <div>
+       (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/abertura.html b/abertura.html
+index 81b8bae4949662beab1cbba44b6798adac704683..212e750a588572f6c37dc048c64b0463f1390823 100644
+--- a/abertura.html
++++ b/abertura.html
+@@ -246,202 +246,310 @@
          <label class="block font-semibold mb-1">Advogado *</label>
          <input id="advogado" class="border p-2 rounded w-full">
        </div>
@@ -268,7 +274,7 @@
  
          <div id="sociosContainer"></div>
  
-+        <button id="btnAdicionarSocio" type="button"
++        <button id="btnAdicionarSocio" type="button" onclick="adicionarSocio()"
            class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
            + Adicionar Sócio
          </button>
@@ -358,6 +364,7 @@
          <input placeholder="Telefone" class="border p-2 rounded">
          <input placeholder="E-mail" class="border p-2 rounded">
  
+-        <!-- Responsável RFB -->
          <div>
            <label class="block text-sm font-semibold">Responsável RFB</label>
            <select class="border p-2 rounded w-full">
@@ -375,7 +382,7 @@
              <option>Não</option>
            </select>
          </div>
- >
+ 
          <div>
            <label class="block text-sm font-semibold">Pró-labore</label>
 +          <select onchange="toggleProlabore(${id}, this.value)" class="border p-2 rounded w-full">
@@ -524,9 +531,6 @@
 +    formulario.addEventListener("submit", validarFormulario);
 +  }
 +
-+  if (botaoAdicionarSocio) {
-+    botaoAdicionarSocio.addEventListener("click", adicionarSocio);
-+  }
 +
 +  if (formaPagamento) {
 +    formaPagamento.addEventListener("change", verificarPagamento);
@@ -540,7 +544,19 @@
 +  toggleAdvogado();
 +}
 +
-+document.addEventListener("DOMContentLoaded", inicializarFormulario);
++window.verificarPagamento = verificarPagamento;
++window.toggleAdvogado = toggleAdvogado;
++window.adicionarSocio = adicionarSocio;
++window.removerSocio = removerSocio;
++window.toggleProlabore = toggleProlabore;
++window.toggleGov = toggleGov;
++window.formatarMoeda = formatarMoeda;
++
++if (document.readyState === "loading") {
++  document.addEventListener("DOMContentLoaded", inicializarFormulario);
++} else {
++  inicializarFormulario();
++}
 +</script>
 +</body>
 +</html>
