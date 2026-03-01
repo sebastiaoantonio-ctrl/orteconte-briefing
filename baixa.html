@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baixa de Empresa - Orteconte</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-blue-900 text-white p-5">
+      <h2 class="text-xl font-bold mb-6">Orteconte</h2>
+      <ul>
+        <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
+        <li class="mb-3 font-bold"><a href="novo.html">Novo Briefing</a></li>
+        <li class="mb-3"><a href="historico.html">Histórico</a></li>
+      </ul>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-10">
+      <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-xl shadow">
+        <header class="mb-8">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-16 h-16 rounded-full border-4 border-blue-700"></div>
+            <div class="flex-1">
+              <div class="h-8 bg-blue-700"></div>
+              <div class="h-1 bg-blue-700 mt-1"></div>
+            </div>
+          </div>
+          <h1 class="text-center text-4xl font-extrabold tracking-wide text-blue-800">BRIEFING SOCIETÁRIO</h1>
+        </header>
+
+        <form class="space-y-6">
+          <section>
+            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Dados Iniciais:</h2>
+            <table class="w-full border border-gray-500 border-collapse text-sm">
+              <tbody>
+                <tr>
+                  <td class="border border-gray-500 p-2 w-1/3"><label class="block">Tipo de Processo:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2 w-1/3"><label class="block">Cliente:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Valor:<input class="w-full outline-none" /></label></td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2"><label class="block">Forma de Pagamento:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Caso Boleto Vencimento:<input type="date" class="w-full outline-none" /></label></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Dados da Empresa:</h2>
+            <table class="w-full border border-gray-500 border-collapse text-sm">
+              <tbody>
+                <tr>
+                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Razão Social:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Grupo:<input class="w-full outline-none" /></label></td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Nome Fantasia:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">CNPJ:<input class="w-full outline-none" /></label></td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2" colspan="3"><label class="block">Endereço Comercial:<input class="w-full outline-none" /></label></td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Responsável RFB:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Telefone:<input class="w-full outline-none" /></label></td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2"><label class="block">E-mail:<input type="email" class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Possui Filiais:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Quanta:<input class="w-full outline-none" /></label></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Dados para Baixa:</h2>
+            <table class="w-full border border-gray-500 border-collapse text-sm">
+              <tbody>
+                <tr>
+                  <td class="border border-gray-500 p-2" colspan="4">
+                    <label class="block">Declarações de nossa Responsabilidade:</label>
+                    <textarea class="w-full min-h-[90px] outline-none"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2"><label class="block">Última Competência:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Possui Bens Móveis ou Imóveis:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Quantos:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2"><label class="block">Possui Leasing:<input class="w-full outline-none" /></label></td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-500 p-2"><label class="block">Possui Conta Bancária:<input class="w-full outline-none" /></label></td>
+                  <td class="border border-gray-500 p-2" colspan="3"><label class="block">Possui Empréstimos ou Financiamentos:<input class="w-full outline-none" /></label></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Coleta de Informações:</h2>
+            <div class="border border-gray-500 p-2 text-sm">
+              <label class="block">Motivo da Baixa:</label>
+              <textarea class="w-full min-h-[80px] outline-none"></textarea>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Observações:</h2>
+            <div class="border border-gray-500 p-2">
+              <textarea class="w-full min-h-[220px] outline-none"></textarea>
+            </div>
+          </section>
+
+          <div class="flex justify-end gap-3 pt-4">
+            <button type="reset" class="px-5 py-2 rounded-lg border border-gray-400 text-gray-700 hover:bg-gray-100">Limpar</button>
+            <button type="submit" class="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Salvar Briefing</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
