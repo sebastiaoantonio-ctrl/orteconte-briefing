@@ -22,7 +22,7 @@
 <div class="flex-1 p-10">
 <h1 class="text-3xl font-bold mb-8">BRIEFING SOCIETÁRIO - ABERTURA</h1>
 
-<form id="formAbertura" class="space-y-10">
+<form class="space-y-10">
 
 <!-- ================= DADOS INICIAIS ================= -->
 <div class="bg-white p-6 rounded-xl shadow">
@@ -37,7 +37,7 @@
 
 <div>
 <label class="block font-semibold mb-1">Valor *</label>
-<input required class="border p-2 rounded w-full">
+<input required oninput="formatarMoeda(this)" class="border p-2 rounded w-full">
 </div>
 
 <div>
@@ -130,22 +130,119 @@
 </div>
 </div>
 
+<h3 class="font-semibold mt-8 mb-3">Forma de Atuação *</h3>
+
+<div class="grid grid-cols-3 gap-3 text-sm">
+<label><input type="checkbox"> Estabelecimento Fixo</label>
+<label><input type="checkbox"> Televendas</label>
+<label><input type="checkbox"> Local Fixo Fora da Loja</label>
+<label><input type="checkbox"> Internet</label>
+<label><input type="checkbox"> Correios</label>
+<label><input type="checkbox"> Porta a Porta / Postos Móveis</label>
+<label><input type="checkbox"> Máquinas Automáticas</label>
+<label><input type="checkbox"> Atividades Fora do Estabelecimento</label>
+</div>
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+
+<div>
+<label>Alvará *</label>
+<select required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Sim</option>
+<option>Não</option>
+</select>
+</div>
+
+<div>
+<label>Licitações *</label>
+<select required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Sim</option>
+<option>Não</option>
+</select>
+</div>
+
+</div>
+
+<div class="mt-6">
+<label>Endereço Completo *</label>
+<input required class="border p-2 rounded w-full">
+</div>
+
+<div class="mt-6">
+<label>Atividades Desenvolvidas *</label>
+<textarea required class="border p-2 rounded w-full"></textarea>
+</div>
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+<div>
+<label>CNAE Principal *</label>
+<input required class="border p-2 rounded w-full">
+</div>
+<div>
+<label>CNAEs Secundários</label>
+<input class="border p-2 rounded w-full">
+</div>
+</div>
+
+<div class="grid grid-cols-3 gap-6 mt-6">
+<div>
+<label>Responsável RFB *</label>
+<input required class="border p-2 rounded w-full">
+</div>
+<div>
+<label>Telefone *</label>
+<input required class="border p-2 rounded w-full">
+</div>
+<div>
+<label>E-mail *</label>
+<input required class="border p-2 rounded w-full">
+</div>
+</div>
+
+<div class="grid grid-cols-3 gap-6 mt-6">
+<div>
+<label>Honorário *</label>
+<input required oninput="formatarMoeda(this)" class="border p-2 rounded w-full">
+</div>
+<div>
+<label>Vencimento *</label>
+<select required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>06</option>
+<option>10</option>
+<option>20</option>
+</select>
+</div>
+<div>
+<label>Usuário Externo *</label>
+<input required class="border p-2 rounded w-full">
+</div>
+</div>
+
 </div>
 
 <!-- ================= DADOS DOS SÓCIOS ================= -->
 <div class="bg-white p-6 rounded-xl shadow">
 <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
-
 <div id="sociosContainer"></div>
-
-<button type="button" onclick="adicionarSocio()"
-class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
+<button type="button" onclick="adicionarSocio()" class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
 + Adicionar Sócio
 </button>
 </div>
 
-<button type="submit"
-class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+<!-- ================= CHECKLIST ================= -->
+<div class="bg-white p-6 rounded-xl shadow">
+<h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
+<label><input type="checkbox"> CNH dos Sócios</label><br>
+<label><input type="checkbox"> IPTU do Imóvel</label><br>
+<label><input type="checkbox"> Contrato de Locação</label><br>
+<label><input type="checkbox"> Certificado Digital</label>
+<textarea placeholder="Observações" class="border p-2 rounded w-full mt-4"></textarea>
+</div>
+
+<button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
 Salvar Briefing
 </button>
 
@@ -154,97 +251,34 @@ Salvar Briefing
 </div>
 
 <script>
-let contadorSocios = 0;
-
-document.getElementById("formaPagamento").addEventListener("change", function(){
-const campo = document.getElementById("campoVencimento");
-campo.style.display = this.value === "Boleto" ? "block" : "none";
+document.getElementById("formaPagamento").addEventListener("change",function(){
+document.getElementById("campoVencimento").style.display=this.value==="Boleto"?"block":"none";
 });
 
-document.getElementById("naturezaJuridica").addEventListener("change", function(){
-const bloco = document.getElementById("blocoAdvogado");
-bloco.style.display = this.value === "Sociedade Anônima (S/A)" ? "grid" : "none";
+document.getElementById("naturezaJuridica").addEventListener("change",function(){
+document.getElementById("blocoAdvogado").style.display=this.value==="Sociedade Anônima (S/A)"?"grid":"none";
 });
 
 function formatarMoeda(campo){
-let valor = campo.value.replace(/\D/g,'');
-valor = (valor/100).toFixed(2)+'';
-valor = valor.replace(".",",");
-valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".");
-campo.value = "R$ "+valor;
+let valor=campo.value.replace(/\D/g,'');
+valor=(valor/100).toFixed(2)+'';
+valor=valor.replace(".",",");
+valor=valor.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+campo.value="R$ "+valor;
 }
 
+let contadorSocios=0;
 function adicionarSocio(){
 contadorSocios++;
-const container = document.getElementById("sociosContainer");
-
-container.insertAdjacentHTML("beforeend",`
+document.getElementById("sociosContainer").insertAdjacentHTML("beforeend",`
 <div class="border p-4 rounded-lg mb-4 bg-gray-50">
 <h3 class="font-semibold text-blue-800 mb-3">Sócio ${contadorSocios}</h3>
-
 <div class="grid grid-cols-2 gap-4">
-
 <input placeholder="Nome" class="border p-2 rounded">
 <input placeholder="Quotas (R$)" class="border p-2 rounded">
-
-<div>
-<label>Responsável RFB</label>
-<select class="border p-2 rounded w-full">
-<option>Sim</option><option>Não</option>
-</select>
-</div>
-
-<div>
-<label>Administrador</label>
-<select class="border p-2 rounded w-full">
-<option>Sim</option><option>Não</option>
-</select>
-</div>
-
-<div>
-<label>Pró-labore</label>
-<select onchange="toggleProlabore(${contadorSocios},this.value)"
-class="border p-2 rounded w-full">
-<option value="">Selecione</option>
-<option>Sim</option>
-<option>Não</option>
-</select>
-</div>
-
-<div id="valorProlabore${contadorSocios}" style="display:none;">
-<label>Valor Pró-labore</label>
-<input oninput="formatarMoeda(this)"
-class="border p-2 rounded w-full">
-</div>
-
-<div>
-<label>Acesso Gov.br</label>
-<select onchange="toggleGov(${contadorSocios},this.value)"
-class="border p-2 rounded w-full">
-<option value="">Selecione</option>
-<option>Sim</option>
-<option>Não</option>
-</select>
-</div>
-
-<div id="senhaGov${contadorSocios}" style="display:none;">
-<label>Senha Gov.br</label>
-<input class="border p-2 rounded w-full">
-</div>
-
 </div>
 </div>
 `);
-}
-
-function toggleProlabore(id,valor){
-const campo = document.getElementById("valorProlabore"+id);
-if(campo) campo.style.display = valor==="Sim"?"block":"none";
-}
-
-function toggleGov(id,valor){
-const campo = document.getElementById("senhaGov"+id);
-if(campo) campo.style.display = valor==="Sim"?"block":"none";
 }
 </script>
 
