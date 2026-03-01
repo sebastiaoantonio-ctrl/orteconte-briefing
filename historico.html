@@ -136,325 +136,327 @@ async function carregarHistorico() {
     celulaAcoes.appendChild(botaoPdf);
 
     tabela.appendChild(linha);
-  });
-}
-
-  function valorSeguro(valor) {
-  if (valor === null || valor === undefined || valor === "") return "-";
-  if (typeof valor === "object") return JSON.stringify(valor);
-  return String(valor);
-}
-
-function obterCampo(item, chave, fallback = "-") {
-  const valorDireto = item[chave];
-  if (valorDireto !== undefined && valorDireto !== null && valorDireto !== "") {
-    return valorSeguro(valorDireto);
-  }
-
-  if (item.dados_json && typeof item.dados_json === "object") {
-    const valorJson = item.dados_json[chave];
-    if (valorJson !== undefined && valorJson !== null && valorJson !== "") {
-      return valorSeguro(valorJson);
-    }
-  }
-
-  return fallback;
-}
-
-function criarContextoPdf(doc, tipo) {
-  return {
-    doc,
-    y: 47,
-    marginX: 10,
-    contentWidth: 190,
-    topMargin: 47,
-    bottomMargin: 18,
-    colors: {
-      azul: [74, 102, 148],
-      preto: [0, 0, 0],
-      borda: [210, 210, 210]
-    },
-    tipo,
-    geradoEm: new Date()
-  };
-}
-
-function garantirEspaco(ctx, alturaNecessaria) {
-  const limitePagina = ctx.doc.internal.pageSize.getHeight() - ctx.bottomMargin;
-  if (ctx.y + alturaNecessaria <= limitePagina) return;
-  ctx.doc.addPage();
-  desenharCabecalhoPdf(ctx);
-  ctx.y = ctx.topMargin;
-}
-
-function desenharCabecalhoPdf(ctx) {
-  const doc = ctx.doc;
-  const [r, g, b] = ctx.colors.azul;
-
-  doc.setTextColor(r, g, b);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(30);
-  doc.text("Orteconte", 10, 18);
-
-  doc.setFontSize(9);
-  doc.text("CONTABILIDADE", 11, 23);
-
-  doc.setFillColor(r, g, b);
-  doc.rect(10, 27, 190, 1.4, "F");
-
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(13);
-  doc.text(`BRIEFING SOCIETÁRIO - ${valorSeguro(ctx.tipo).toUpperCase()}`, 105, 36, { align: "center" });
-}
-
-function desenharTituloSecao(ctx, titulo) {
-  garantirEspaco(ctx, 11);
-  const doc = ctx.doc;
-  const [r, g, b] = ctx.colors.azul;
-
-  doc.setDrawColor(r, g, b);
-  doc.setLineWidth(0.5);
- doc.line(ctx.marginX, ctx.y, ctx.marginX + ctx.contentWidth, ctx.y);
-
-  doc.setTextColor(r, g, b);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
- doc.text(titulo, ctx.marginX, ctx.y + 6);
-
-  doc.setTextColor(0, 0, 0);
-  ctx.y += 9;
-}
-
-function desenharCamposEmLinha(ctx, campos) {
-  const doc = ctx.doc;
-  const alturaLinhaBase = 5;
-  const padding = 2;
-  let maiorAltura = 12;
-
-  const camposComLinhas = campos.map((campo) => {
-    const largura = ctx.contentWidth * campo.proporcao;
-    const valor = valorSeguro(campo.valor);
-    const linhas = doc.splitTextToSize(valor, largura - (padding * 2));
-    const altura = 4 + (linhas.length * alturaLinhaBase) + 2;
-    maiorAltura = Math.max(maiorAltura, altura);
-    return { ...campo, largura, linhas };
-  });
-
-  garantirEspaco(ctx, maiorAltura + 2);
-
-  doc.setDrawColor(...ctx.colors.borda);
-  doc.rect(ctx.marginX, ctx.y, ctx.contentWidth, maiorAltura);
-
-  let x = ctx.marginX;
-  camposComLinhas.forEach((campo, index) => {
-    if (index > 0) {
-      doc.line(x, ctx.y, x, ctx.y + maiorAltura);
-    }
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(8.5);
-    doc.text(campo.label, x + padding, ctx.y + 4);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-doc.text(campo.linhas, x + padding, ctx.y + 8.5);
-
-    x += campo.largura;
-  });
-
- ctx.y += maiorAltura + 2;
-}
-
-function desenharCaixaTexto(ctx, titulo, valor) {
-  const doc = ctx.doc;
-  const padding = 2;
-  const linhas = doc.splitTextToSize(valorSeguro(valor), ctx.contentWidth - (padding * 2));
-  const altura = Math.max(14, 7 + (linhas.length * 4.5));
-
-  garantirEspaco(ctx, altura + 2);
-  doc.setDrawColor(...ctx.colors.borda);
-  doc.rect(ctx.marginX, ctx.y, ctx.contentWidth, altura);
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(8.5);
-  doc.text(titulo, ctx.marginX + padding, ctx.y + 4);
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.text(linhas, ctx.marginX + padding, ctx.y + 8.5);
-
-  ctx.y += altura + 2;
-}
-
-function desenharSubsecaoSocio(ctx, titulo) {
-  garantirEspaco(ctx, 8);
-  const [r, g, b] = ctx.colors.azul;
-  ctx.doc.setTextColor(r, g, b);
-  ctx.doc.setFont("helvetica", "bold");
-  ctx.doc.setFontSize(10);
-  ctx.doc.text(titulo, ctx.marginX + 1, ctx.y + 5);
-  ctx.doc.setTextColor(0, 0, 0);
-  ctx.y += 7;
-}
-
-  function extrairSocios(item) {
-  const dados = item?.dados_json;
-  if (!dados || typeof dados !== "object") return [];
-
-  const possiveisChaves = ["socios", "sócios", "quadro_societario", "quadroSocietario"];
-  for (const chave of possiveisChaves) {
-    const valor = dados[chave];
-    if (Array.isArray(valor)) return valor;
-  }
-  return [];
-}
-
-  function extrairChecklist(item) {
-  const dados = item?.dados_json;
-  if (!dados || typeof dados !== "object") return [];
-
-  if (Array.isArray(dados.checklist)) {
-    return dados.checklist.map((entrada) => {
-      if (typeof entrada === "string") return { label: entrada, marcado: false };
-      return {
-        label: valorSeguro(entrada.label || entrada.nome || entrada.item || "Item"),
-        marcado: Boolean(entrada.marcado ?? entrada.checked ?? entrada.concluido)
-      };
-    });
-  }
-
-  if (dados.checklist && typeof dados.checklist === "object") {
-    return Object.entries(dados.checklist).map(([chave, valor]) => ({
-      label: chave,
-      marcado: Boolean(valor)
-    }));
-  }
-
-  return Object.entries(dados)
-    .filter(([chave]) => chave.startsWith("checklist_"))
-    .map(([chave, valor]) => ({
-      label: chave.replace(/^checklist_/, "").replace(/_/g, " "),
-      marcado: Boolean(valor)
-    }));
-}
-
-function adicionarRodapeTodasPaginas(ctx) {
-  const totalPaginas = ctx.doc.getNumberOfPages();
-  const dataTexto = ctx.geradoEm.toLocaleString();
-  for (let i = 1; i <= totalPaginas; i += 1) {
-    ctx.doc.setPage(i);
-    ctx.doc.setDrawColor(...ctx.colors.borda);
-    ctx.doc.line(10, 286, 200, 286);
-    ctx.doc.setFont("helvetica", "normal");
-    ctx.doc.setFontSize(8);
-    ctx.doc.setTextColor(80, 80, 80);
-    ctx.doc.text(`Gerado em: ${dataTexto}`, 10, 290);
-    ctx.doc.text(`Página ${i} de ${totalPaginas}`, 200, 290, { align: "right" });
-    ctx.doc.setTextColor(0, 0, 0);
-  }
-}
-
-function gerarPdfBriefing(item) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const tipoBriefing = obterCampo(item, "tipo", "geral");
-  const ctx = criarContextoPdf(doc, tipoBriefing);
-
-  desenharCabecalhoPdf(ctx);
-
-  desenharTituloSecao(ctx, "Dados Iniciais");
-  desenharCamposEmLinha(ctx, [
-    { label: "Tipo de Processo", valor: obterCampo(item, "tipo"), proporcao: 0.35 },
-    { label: "Cliente", valor: obterCampo(item, "empresa"), proporcao: 0.45 },
-    { label: "Valor", valor: obterCampo(item, "valor"), proporcao: 0.20 }
+     });
+ }
+ 
+   function valorSeguro(valor) {
+   if (valor === null || valor === undefined || valor === "") return "-";
+   if (typeof valor === "object") return JSON.stringify(valor);
+   return String(valor);
+ }
+ 
+ function obterCampo(item, chave, fallback = "-") {
+   const valorDireto = item[chave];
+   if (valorDireto !== undefined && valorDireto !== null && valorDireto !== "") {
+     return valorSeguro(valorDireto);
+   }
+ 
+   if (item.dados_json && typeof item.dados_json === "object") {
+     const valorJson = item.dados_json[chave];
+     if (valorJson !== undefined && valorJson !== null && valorJson !== "") {
+       return valorSeguro(valorJson);
+     }
+   }
+ 
+   return fallback;
+ }
+ 
++function criarContextoPdf(doc, tipo) {
++  return {
++    doc,
++    y: 47,
++    marginX: 10,
++    contentWidth: 190,
++    topMargin: 47,
++    bottomMargin: 18,
++    colors: {
++      azul: [74, 102, 148],
++      preto: [0, 0, 0],
++      borda: [210, 210, 210]
++    },
++    tipo,
++    geradoEm: new Date()
++  };
++}
++
++function garantirEspaco(ctx, alturaNecessaria) {
++  const limitePagina = ctx.doc.internal.pageSize.getHeight() - ctx.bottomMargin;
++  if (ctx.y + alturaNecessaria <= limitePagina) return;
++  ctx.doc.addPage();
++  desenharCabecalhoPdf(ctx);
++  ctx.y = ctx.topMargin;
++}
++
++function desenharCabecalhoPdf(ctx) {
++  const doc = ctx.doc;
++  const [r, g, b] = ctx.colors.azul;
++
++  doc.setTextColor(r, g, b);
++  doc.setFont("helvetica", "bold");
++  doc.setFontSize(30);
++  doc.text("Orteconte", 10, 18);
++
++  doc.setFontSize(9);
++  doc.text("CONTABILIDADE", 11, 23);
++
++  doc.setFillColor(r, g, b);
++  doc.rect(10, 27, 190, 1.4, "F");
++
++  doc.setTextColor(0, 0, 0);
++  doc.setFontSize(13);
++  doc.text(`BRIEFING SOCIETÁRIO - ${valorSeguro(ctx.tipo).toUpperCase()}`, 105, 36, { align: "center" });
++}
++
++function desenharTituloSecao(ctx, titulo) {
++  garantirEspaco(ctx, 11);
++  const doc = ctx.doc;
++  const [r, g, b] = ctx.colors.azul;
++
++  doc.setDrawColor(r, g, b);
+   doc.setLineWidth(0.5);
++  doc.line(ctx.marginX, ctx.y, ctx.marginX + ctx.contentWidth, ctx.y);
+ 
++  doc.setTextColor(r, g, b);
+   doc.setFont("helvetica", "bold");
+   doc.setFontSize(11);
++  doc.text(titulo, ctx.marginX, ctx.y + 6);
+ 
++  doc.setTextColor(0, 0, 0);
++  ctx.y += 9;
+ }
+ 
++function desenharCamposEmLinha(ctx, campos) {
++  const doc = ctx.doc;
++  const alturaLinhaBase = 5;
++  const padding = 2;
++  let maiorAltura = 12;
++
++  const camposComLinhas = campos.map((campo) => {
++    const largura = ctx.contentWidth * campo.proporcao;
++    const valor = valorSeguro(campo.valor);
++    const linhas = doc.splitTextToSize(valor, largura - (padding * 2));
++    const altura = 4 + (linhas.length * alturaLinhaBase) + 2;
++    maiorAltura = Math.max(maiorAltura, altura);
++    campo.largura = largura;
++    campo.linhas = linhas;
++    return campo;
++  });
+ 
++  garantirEspaco(ctx, maiorAltura + 2);
+ 
++  doc.setDrawColor(ctx.colors.borda[0], ctx.colors.borda[1], ctx.colors.borda[2]);
++  doc.rect(ctx.marginX, ctx.y, ctx.contentWidth, maiorAltura);
++
++  let x = ctx.marginX;
++  camposComLinhas.forEach((campo, index) => {
+     if (index > 0) {
++      doc.line(x, ctx.y, x, ctx.y + maiorAltura);
+     }
+ 
++    doc.setFont("helvetica", "bold");
++    doc.setFontSize(8.5);
++    doc.text(campo.label, x + padding, ctx.y + 4);
++
+     doc.setFont("helvetica", "normal");
+     doc.setFontSize(9);
++    doc.text(campo.linhas, x + padding, ctx.y + 8.5);
+ 
++    x += campo.largura;
+   });
+ 
++  ctx.y += maiorAltura + 2;
+ }
+ 
++function desenharCaixaTexto(ctx, titulo, valor) {
++  const doc = ctx.doc;
++  const padding = 2;
++  const linhas = doc.splitTextToSize(valorSeguro(valor), ctx.contentWidth - (padding * 2));
++  const altura = Math.max(14, 7 + (linhas.length * 4.5));
+ 
++  garantirEspaco(ctx, altura + 2);
++  doc.setDrawColor(ctx.colors.borda[0], ctx.colors.borda[1], ctx.colors.borda[2]);
++  doc.rect(ctx.marginX, ctx.y, ctx.contentWidth, altura);
++
++  doc.setFont("helvetica", "bold");
++  doc.setFontSize(8.5);
++  doc.text(titulo, ctx.marginX + padding, ctx.y + 4);
+ 
+   doc.setFont("helvetica", "normal");
+   doc.setFontSize(9);
++  doc.text(linhas, ctx.marginX + padding, ctx.y + 8.5);
+ 
++  ctx.y += altura + 2;
+ }
+ 
++function desenharSubsecaoSocio(ctx, titulo) {
++  garantirEspaco(ctx, 8);
++  const [r, g, b] = ctx.colors.azul;
++  ctx.doc.setTextColor(r, g, b);
++  ctx.doc.setFont("helvetica", "bold");
++  ctx.doc.setFontSize(10);
++  ctx.doc.text(titulo, ctx.marginX + 1, ctx.y + 5);
++  ctx.doc.setTextColor(0, 0, 0);
++  ctx.y += 7;
++}
+ 
++function extrairSocios(item) {
++  const dados = item && item.dados_json;
++  if (!dados || typeof dados !== "object") return [];
+ 
++  const possiveisChaves = ["socios", "sócios", "quadro_societario", "quadroSocietario"];
++  for (const chave of possiveisChaves) {
++    const valor = dados[chave];
++    if (Array.isArray(valor)) return valor;
++  }
++  return [];
++}
+ 
++function extrairChecklist(item) {
++  const dados = item && item.dados_json;
++  if (!dados || typeof dados !== "object") return [];
++
++  if (Array.isArray(dados.checklist)) {
++    return dados.checklist.map((entrada) => {
++      if (typeof entrada === "string") return { label: entrada, marcado: false };
++      return {
++        label: valorSeguro(entrada.label || entrada.nome || entrada.item || "Item"),
++        marcado: Boolean((entrada.marcado !== undefined ? entrada.marcado : (entrada.checked !== undefined ? entrada.checked : entrada.concluido)))
++      };
++    });
++  }
+ 
++  if (dados.checklist && typeof dados.checklist === "object") {
++    return Object.entries(dados.checklist).map(([chave, valor]) => ({
++      label: chave,
++      marcado: Boolean(valor)
++    }));
++  }
++
++  return Object.entries(dados)
++    .filter(([chave]) => chave.startsWith("checklist_"))
++    .map(([chave, valor]) => ({
++      label: chave.replace(/^checklist_/, "").replace(/_/g, " "),
++      marcado: Boolean(valor)
++    }));
++}
++
++function adicionarRodapeTodasPaginas(ctx) {
++  const totalPaginas = ctx.doc.getNumberOfPages();
++  const dataTexto = ctx.geradoEm.toLocaleString();
++  for (let i = 1; i <= totalPaginas; i += 1) {
++    ctx.doc.setPage(i);
++    ctx.doc.setDrawColor(ctx.colors.borda[0], ctx.colors.borda[1], ctx.colors.borda[2]);
++    ctx.doc.line(10, 286, 200, 286);
++    ctx.doc.setFont("helvetica", "normal");
++    ctx.doc.setFontSize(8);
++    ctx.doc.setTextColor(80, 80, 80);
++    ctx.doc.text(`Gerado em: ${dataTexto}`, 10, 290);
++    ctx.doc.text(`Página ${i} de ${totalPaginas}`, 200, 290, { align: "right" });
++    ctx.doc.setTextColor(0, 0, 0);
++  }
++}
++
++function gerarPdfBriefing(item) {
++  const { jsPDF } = window.jspdf;
++  const doc = new jsPDF({ unit: "mm", format: "a4" });
++  const tipoBriefing = obterCampo(item, "tipo", "geral");
++  const ctx = criarContextoPdf(doc, tipoBriefing);
+ 
++  desenharCabecalhoPdf(ctx);
+ 
++  desenharTituloSecao(ctx, "Dados Iniciais");
++  desenharCamposEmLinha(ctx, [
++    { label: "Tipo de Processo", valor: obterCampo(item, "tipo"), proporcao: 0.35 },
++    { label: "Cliente", valor: obterCampo(item, "empresa"), proporcao: 0.45 },
+     { label: "Valor", valor: obterCampo(item, "valor"), proporcao: 0.20 }
+   ]);
++  desenharCamposEmLinha(ctx, [
+     { label: "Forma de Pagamento", valor: obterCampo(item, "forma_pagamento"), proporcao: 0.50 },
+     { label: "Caso Boleto Vencimento", valor: obterCampo(item, "boleto_vencimento"), proporcao: 0.50 }
++  ]);
+ 
++  desenharTituloSecao(ctx, "Dados da Empresa");
++  desenharCamposEmLinha(ctx, [
++    { label: "Razão Social", valor: obterCampo(item, "empresa"), proporcao: 0.70 },
++    { label: "Grupo", valor: obterCampo(item, "grupo"), proporcao: 0.30 }
+   ]);
++  desenharCamposEmLinha(ctx, [
++    { label: "Nome Fantasia", valor: obterCampo(item, "nome_fantasia"), proporcao: 0.65 },
++    { label: "CNPJ", valor: obterCampo(item, "cpf_cnpj"), proporcao: 0.35 }
+   ]);
++  desenharCamposEmLinha(ctx, [
++    { label: "Natureza Jurídica", valor: obterCampo(item, "natureza_juridica"), proporcao: 0.42 },
++    { label: "Regime Tributário", valor: obterCampo(item, "regime_tributario"), proporcao: 0.32 },
+     { label: "Enquadramento", valor: obterCampo(item, "enquadramento"), proporcao: 0.26 }
++  ]);
++  desenharCaixaTexto(ctx, "Endereço Comercial", obterCampo(item, "endereco"));
++  desenharCaixaTexto(ctx, "Objeto Social", obterCampo(item, "objeto_social"));
++  desenharCamposEmLinha(ctx, [
+     { label: "Capital Social", valor: obterCampo(item, "capital_social"), proporcao: 0.30 },
+     { label: "Telefone", valor: obterCampo(item, "telefone"), proporcao: 0.25 },
+     { label: "Email", valor: obterCampo(item, "email"), proporcao: 0.45 }
+   ]);
++  desenharCamposEmLinha(ctx, [
+     { label: "Responsável RFB", valor: obterCampo(item, "responsavel_rfb"), proporcao: 0.57 },
+     { label: "Novo Honorário", valor: obterCampo(item, "novo_honorario"), proporcao: 0.16 },
+     { label: "Valor", valor: obterCampo(item, "valor_honorario"), proporcao: 0.27 }
   ]);
-desenharCamposEmLinha(ctx, [
-    { label: "Forma de Pagamento", valor: obterCampo(item, "forma_pagamento"), proporcao: 0.50 },
-    { label: "Caso Boleto Vencimento", valor: obterCampo(item, "boleto_vencimento"), proporcao: 0.50 }
-  ]);
-
- desenharTituloSecao(ctx, "Dados da Empresa");
-  desenharCamposEmLinha(ctx, [
-    { label: "Razão Social", valor: obterCampo(item, "empresa"), proporcao: 0.70 },
-    { label: "Grupo", valor: obterCampo(item, "grupo"), proporcao: 0.30 }
-  ]);
-  y = desenharLinhaCampos(doc, y, [
-    { label: "Nome Fantasia", valor: obterCampo(item, "nome_fantasia"), proporcao: 0.66 },
-    { label: "CNPJ", valor: obterCampo(item, "cpf_cnpj"), proporcao: 0.34 }
-  ]);
-  desenharCamposEmLinha(ctx, [
-    { label: "Natureza Jurídica", valor: obterCampo(item, "natureza_juridica"), proporcao: 0.42 },
-    { label: "Regime Tributário", valor: obterCampo(item, "regime_tributario"), proporcao: 0.32 },
-    { label: "Enquadramento", valor: obterCampo(item, "enquadramento"), proporcao: 0.26 }
-  ]);
-  desenharCaixaTexto(ctx, "Endereço Comercial", obterCampo(item, "endereco"));
-  desenharCaixaTexto(ctx, "Objeto Social", obterCampo(item, "objeto_social"));
-  desenharCamposEmLinha(ctx, [
-    { label: "Capital Social", valor: obterCampo(item, "capital_social"), proporcao: 0.30 },
-    { label: "Telefone", valor: obterCampo(item, "telefone"), proporcao: 0.25 },
-    { label: "Email", valor: obterCampo(item, "email"), proporcao: 0.45 }
-  ]);
-  desenharCamposEmLinha(ctx, [
-    { label: "Responsável RFB", valor: obterCampo(item, "responsavel_rfb"), proporcao: 0.57 },
-    { label: "Novo Honorário", valor: obterCampo(item, "novo_honorario"), proporcao: 0.16 },
-    { label: "Valor", valor: obterCampo(item, "valor_honorario"), proporcao: 0.27 }
-  ]);
-desenharCaixaTexto(ctx, "Orientações", obterCampo(item, "orientacoes"));
-  
-  desenharTituloSecao(ctx, "Dados dos Sócios");
-  const socios = extrairSocios(item);
-  if (!socios.length) {
-    desenharCaixaTexto(ctx, "Sócios", "Não há sócios cadastrados em dados_json.");
-  } else {
-    socios.forEach((socio, index) => {
-      desenharSubsecaoSocio(ctx, `Sócio ${index + 1}`);
-      desenharCamposEmLinha(ctx, [
-        { label: "Nome", valor: socio.nome || socio.nome_completo || socio.razao || "-", proporcao: 0.65 },
-        { label: "Quotas", valor: socio.quotas || socio.participacao || "-", proporcao: 0.35 }
-      ]);
-      desenharCamposEmLinha(ctx, [
-        { label: "Administrador", valor: socio.administrador || "-", proporcao: 0.25 },
-        { label: "Pró-labore", valor: socio.pro_labore || socio["pró_labore"] || "-", proporcao: 0.20 },
-        { label: "Valor Pró-labore", valor: socio.valor_pro_labore || socio.valorProLabore || "-", proporcao: 0.25 },
-        { label: "Acesso Gov", valor: socio.acesso_gov || socio.acessoGov || "-", proporcao: 0.30 }
-      ]);
-
-      const extrasIgnorados = new Set(["nome", "nome_completo", "razao", "quotas", "participacao", "administrador", "pro_labore", "pró_labore", "valor_pro_labore", "valorProLabore", "acesso_gov", "acessoGov"]);
-      const extras = Object.entries(socio || {}).filter(([chave]) => !extrasIgnorados.has(chave));
-      extras.forEach(([chave, valor]) => {
-        desenharCaixaTexto(ctx, chave, valorSeguro(valor));
-      });
-    });
-  }
-
-  desenharTituloSecao(ctx, "Checklist");
-  const checklist = extrairChecklist(item);
-  if (!checklist.length) {
-    desenharCaixaTexto(ctx, "Checklist", "Nenhum item de checklist encontrado.");
-  } else {
-    checklist.forEach((entrada) => {
-      const itemTexto = `${entrada.marcado ? "(✔)" : "( )"} ${valorSeguro(entrada.label)}`;
-      desenharCaixaTexto(ctx, "Item", itemTexto);
-    });
-  }
-
-  desenharTituloSecao(ctx, "Controle do Briefing");
-  desenharCamposEmLinha(ctx, [
-    { label: "Status", valor: obterCampo(item, "status"), proporcao: 0.33 },
-    { label: "Criado em", valor: item.criado_em ? new Date(item.criado_em).toLocaleString() : "-", proporcao: 0.34 },
-    { label: "ID", valor: obterCampo(item, "id"), proporcao: 0.33 }
-  ]);
-
-  adicionarRodapeTodasPaginas(ctx);
-
-  const tipo = valorSeguro(obterCampo(item, "tipo", "geral")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
-  const empresa = valorSeguro(obterCampo(item, "empresa", "empresa")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
-  doc.save(`briefing_${tipo}_${empresa}.pdf`);
-}
-  
-
-carregarHistorico();
-</script>
-
-</body>
-</html>
++  desenharCaixaTexto(ctx, "Orientações", obterCampo(item, "orientacoes"));
+ 
++  desenharTituloSecao(ctx, "Dados dos Sócios");
++  const socios = extrairSocios(item);
++  if (!socios.length) {
++    desenharCaixaTexto(ctx, "Sócios", "Não há sócios cadastrados em dados_json.");
++  } else {
++    socios.forEach((socio, index) => {
++      desenharSubsecaoSocio(ctx, `Sócio ${index + 1}`);
++      desenharCamposEmLinha(ctx, [
++        { label: "Nome", valor: socio.nome || socio.nome_completo || socio.razao || "-", proporcao: 0.65 },
++        { label: "Quotas", valor: socio.quotas || socio.participacao || "-", proporcao: 0.35 }
++      ]);
++      desenharCamposEmLinha(ctx, [
++        { label: "Administrador", valor: socio.administrador || "-", proporcao: 0.25 },
++        { label: "Pró-labore", valor: socio.pro_labore || socio["pró_labore"] || "-", proporcao: 0.20 },
++        { label: "Valor Pró-labore", valor: socio.valor_pro_labore || socio.valorProLabore || "-", proporcao: 0.25 },
++        { label: "Acesso Gov", valor: socio.acesso_gov || socio.acessoGov || "-", proporcao: 0.30 }
++      ]);
++
++      const extrasIgnorados = new Set(["nome", "nome_completo", "razao", "quotas", "participacao", "administrador", "pro_labore", "pró_labore", "valor_pro_labore", "valorProLabore", "acesso_gov", "acessoGov"]);
++      const extras = Object.entries(socio || {}).filter(([chave]) => !extrasIgnorados.has(chave));
++      extras.forEach(([chave, valor]) => {
++        desenharCaixaTexto(ctx, chave, valorSeguro(valor));
++      });
+     });
+   }
+ 
++  desenharTituloSecao(ctx, "Checklist");
++  const checklist = extrairChecklist(item);
++  if (!checklist.length) {
++    desenharCaixaTexto(ctx, "Checklist", "Nenhum item de checklist encontrado.");
+   } else {
++    checklist.forEach((entrada) => {
++      const itemTexto = `${entrada.marcado ? "(✔)" : "( )"} ${valorSeguro(entrada.label)}`;
++      desenharCaixaTexto(ctx, "Item", itemTexto);
+     });
+   }
+ 
++  desenharTituloSecao(ctx, "Controle do Briefing");
++  desenharCamposEmLinha(ctx, [
++    { label: "Status", valor: obterCampo(item, "status"), proporcao: 0.33 },
++    { label: "Criado em", valor: item.criado_em ? new Date(item.criado_em).toLocaleString() : "-", proporcao: 0.34 },
++    { label: "ID", valor: obterCampo(item, "id"), proporcao: 0.33 }
++  ]);
++
++  adicionarRodapeTodasPaginas(ctx);
++
++  const tipo = valorSeguro(obterCampo(item, "tipo", "geral")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
++  const empresa = valorSeguro(obterCampo(item, "empresa", "empresa")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
++  doc.save(`briefing_${tipo}_${empresa}.pdf`);
+ }
+   
+ 
+ carregarHistorico();
+ </script>
+ 
+ </body>
+ </html>
