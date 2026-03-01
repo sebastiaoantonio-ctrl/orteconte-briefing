@@ -395,7 +395,70 @@ function adicionarRodapeTodasPaginas(ctx) {
   }
 }
 
+// ================= CONTROLADOR =================
 function gerarPdfBriefing(item) {
+
+  switch (item.tipo) {
+
+    case "abertura":
+      gerarPdfAbertura(item);
+      break;
+
+    case "alteracao":
+      gerarPdfAlteracao(item);
+      break;
+
+    case "baixa":
+      gerarPdfBaixa(item);
+      break;
+
+    case "portabilidade-entrada":
+      gerarPdfPortabilidadeEntrada(item);
+      break;
+
+    case "portabilidade-saida":
+      gerarPdfPortabilidadeSaida(item);
+      break;
+
+    default:
+      gerarPdfGenerico(item);
+  }
+
+}
+
+// ================= MODELO ABERTURA =================
+function gerarPdfAbertura(item) {
+  gerarPdfModeloPadrao(item);
+}
+
+// ================= MODELO ALTERAÇÃO =================
+function gerarPdfAlteracao(item) {
+  gerarPdfModeloPadrao(item);
+}
+
+// ================= MODELO BAIXA =================
+function gerarPdfBaixa(item) {
+  gerarPdfModeloPadrao(item);
+}
+
+// ================= MODELO PORTABILIDADE ENTRADA =================
+function gerarPdfPortabilidadeEntrada(item) {
+  gerarPdfModeloPadrao(item);
+}
+
+// ================= MODELO PORTABILIDADE SAÍDA =================
+function gerarPdfPortabilidadeSaida(item) {
+  gerarPdfModeloPadrao(item);
+}
+
+// ================= MODELO GENÉRICO =================
+function gerarPdfGenerico(item) {
+  gerarPdfModeloPadrao(item);
+}
+
+// ================= SEU LAYOUT ORIGINAL =================
+function gerarPdfModeloPadrao(item) {
+
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const tipoBriefing = obterCampo(item, "tipo", "geral");
@@ -450,32 +513,9 @@ function gerarPdfBriefing(item) {
     socios.forEach((socio, index) => {
       desenharSubsecaoSocio(ctx, `Sócio ${index + 1}`);
       desenharCamposEmLinha(ctx, [
-        { label: "Nome", valor: socio.nome || socio.nome_completo || socio.razao || "-", proporcao: 0.65 },
-        { label: "Quotas", valor: socio.quotas || socio.participacao || "-", proporcao: 0.35 }
+        { label: "Nome", valor: socio.nome || "-", proporcao: 0.65 },
+        { label: "Quotas", valor: socio.quotas || "-", proporcao: 0.35 }
       ]);
-      desenharCamposEmLinha(ctx, [
-        { label: "Administrador", valor: socio.administrador || "-", proporcao: 0.25 },
-        { label: "Pró-labore", valor: socio.pro_labore || socio["pró_labore"] || "-", proporcao: 0.20 },
-        { label: "Valor Pró-labore", valor: socio.valor_pro_labore || socio.valorProLabore || "-", proporcao: 0.25 },
-        { label: "Acesso Gov", valor: socio.acesso_gov || socio.acessoGov || "-", proporcao: 0.30 }
-      ]);
-
-      const extrasIgnorados = new Set(["nome", "nome_completo", "razao", "quotas", "participacao", "administrador", "pro_labore", "pró_labore", "valor_pro_labore", "valorProLabore", "acesso_gov", "acessoGov"]);
-      const extras = Object.entries(socio || {}).filter(([chave]) => !extrasIgnorados.has(chave));
-      extras.forEach(([chave, valor]) => {
-        desenharCaixaTexto(ctx, chave, valorSeguro(valor));
-      });
-    });
-  }
-
-  desenharTituloSecao(ctx, "Checklist");
-  const checklist = extrairChecklist(item);
-  if (!checklist.length) {
-    desenharCaixaTexto(ctx, "Checklist", "Nenhum item de checklist encontrado.");
-  } else {
-    checklist.forEach((entrada) => {
-      const itemTexto = `${entrada.marcado ? "(✔)" : "( )"} ${valorSeguro(entrada.label)}`;
-      desenharCaixaTexto(ctx, "Item", itemTexto);
     });
   }
 
@@ -492,7 +532,6 @@ function gerarPdfBriefing(item) {
   const empresa = valorSeguro(obterCampo(item, "empresa", "empresa")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
   doc.save(`briefing_${tipo}_${empresa}.pdf`);
 }
-  
 
 carregarHistorico();
 </script>
