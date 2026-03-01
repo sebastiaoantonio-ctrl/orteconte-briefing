@@ -27,29 +27,25 @@
         <h2 class="text-xl font-bold mb-4">Dados Iniciais</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block font-semibold mb-1">Tipo de Processo *</label>
-            <input name="tipoProcesso" required class="border p-2 rounded w-full">
-          </div>
-          <div>
             <label class="block font-semibold mb-1">Cliente *</label>
             <input name="cliente" required class="border p-2 rounded w-full">
           </div>
           <div>
-            <label class="block font-semibold mb-1">Valor *</label>
-            <input name="valor" required class="border p-2 rounded w-full">
+            <label class="block font-semibold mb-1">Valor do Processo *</label>
+            <input name="valorProcesso" required oninput="formatarMoeda(this)" class="border p-2 rounded w-full" placeholder="R$ 0,00">
           </div>
           <div>
             <label class="block font-semibold mb-1">Forma de Pagamento *</label>
-            <select name="formaPagamento" required class="border p-2 rounded w-full">
+            <select id="formaPagamento" name="formaPagamento" required class="border p-2 rounded w-full">
               <option value="">Selecione</option>
               <option>Pix</option>
               <option>Depósito</option>
               <option>Boleto</option>
             </select>
           </div>
-          <div>
+          <div id="blocoVencimento" class="hidden">
             <label class="block font-semibold mb-1">Caso Boleto - Vencimento *</label>
-            <input name="vencimentoBoleto" type="date" required class="border p-2 rounded w-full">
+            <input id="vencimentoBoleto" name="vencimentoBoleto" type="date" class="border p-2 rounded w-full" disabled>
           </div>
         </div>
       </section>
@@ -83,8 +79,8 @@
             <input id="empresa" name="empresa" required class="border p-2 rounded w-full">
           </div>
           <div>
-            <label class="block font-semibold mb-1">Grupo *</label>
-            <input id="grupo" name="grupo" required class="border p-2 rounded w-full">
+            <label class="block font-semibold mb-1">Grupo</label>
+            <input id="grupo" name="grupo" class="border p-2 rounded w-full">
           </div>
           <div>
             <label class="block font-semibold mb-1">CNPJ *</label>
@@ -96,19 +92,38 @@
           </div>
           <div>
             <label class="block font-semibold mb-1">Natureza Jurídica *</label>
-            <input name="naturezaJuridicaAtual" required class="border p-2 rounded w-full">
+            <select name="naturezaJuridicaAtual" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sociedade Limitada (LTDA)</option>
+              <option>Sociedade Limitada Unipessoal (SLU)</option>
+              <option>Microempreendedor Individual (MEI)</option>
+              <option>Sociedade Anônima (S/A)</option>
+              <option>Empresário Individual (EI)</option>
+            </select>
           </div>
           <div>
             <label class="block font-semibold mb-1">Regime Tributário *</label>
-            <input name="regimeTributarioAtual" required class="border p-2 rounded w-full">
+            <select name="regimeTributarioAtual" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Simples Nacional</option>
+              <option>Lucro Presumido</option>
+              <option>Lucro Real</option>
+              <option>MEI</option>
+            </select>
           </div>
           <div>
             <label class="block font-semibold mb-1">Enquadramento *</label>
-            <input name="enquadramentoAtual" required class="border p-2 rounded w-full">
+            <select name="enquadramentoAtual" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>MEI</option>
+              <option>ME</option>
+              <option>EPP</option>
+              <option>Demais</option>
+            </select>
           </div>
           <div>
             <label class="block font-semibold mb-1">Capital Social *</label>
-            <input name="capitalSocialAtual" required class="border p-2 rounded w-full">
+            <input name="capitalSocialAtual" required oninput="formatarMoeda(this)" class="border p-2 rounded w-full" placeholder="R$ 0,00">
           </div>
           <div>
             <label class="block font-semibold mb-1">Telefone *</label>
@@ -123,12 +138,16 @@
             <input name="responsavelRfbAtual" required class="border p-2 rounded w-full">
           </div>
           <div>
-            <label class="block font-semibold mb-1">Novo Honorário *</label>
-            <input name="novoHonorario" required class="border p-2 rounded w-full">
+            <label class="block font-semibold mb-1">Novo Honorário? *</label>
+            <select id="novoHonorario" name="novoHonorario" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
           </div>
-          <div>
+          <div id="blocoValorHonorario" class="hidden">
             <label class="block font-semibold mb-1">Valor *</label>
-            <input name="valorHonorario" required class="border p-2 rounded w-full">
+            <input id="valorHonorario" name="valorHonorario" oninput="formatarMoeda(this)" class="border p-2 rounded w-full" placeholder="R$ 0,00" disabled>
           </div>
         </div>
 
@@ -145,7 +164,7 @@
 
       <section class="bg-white p-6 rounded-xl shadow">
         <h2 class="text-xl font-bold mb-2">Orientações</h2>
-        <textarea name="orientacoesGerais" required class="border p-2 rounded w-full min-h-[110px]" placeholder="Descreva a alteração"></textarea>
+        <textarea name="orientacoesGerais" class="border p-2 rounded w-full min-h-[110px]" placeholder="Descreva a alteração"></textarea>
       </section>
 
       <section id="sec-razao" class="evento-section hidden bg-white p-6 rounded-xl shadow">
@@ -169,7 +188,7 @@
       <section id="sec-capital" class="evento-section hidden bg-white p-6 rounded-xl shadow">
         <h3 class="font-bold mb-3">Alteração de Capital Social</h3>
         <label class="block font-semibold mb-1">Novo Capital Social *</label>
-        <input data-when-visible name="novoCapitalSocial" class="border p-2 rounded w-full" disabled>
+        <input data-when-visible name="novoCapitalSocial" oninput="formatarMoeda(this)" class="border p-2 rounded w-full" placeholder="R$ 0,00" disabled>
       </section>
 
       <section id="sec-resp-rfb" class="evento-section hidden bg-white p-6 rounded-xl shadow">
@@ -181,13 +200,41 @@
       <section id="sec-regime" class="evento-section hidden bg-white p-6 rounded-xl shadow">
         <h3 class="font-bold mb-3">Alteração de Regime Tributário</h3>
         <label class="block font-semibold mb-1">Novo Regime Tributário *</label>
-        <input data-when-visible name="novoRegimeTributario" class="border p-2 rounded w-full" disabled>
+        <select data-when-visible name="novoRegimeTributario" class="border p-2 rounded w-full" disabled>
+          <option value="">Selecione</option>
+          <option>Simples Nacional</option>
+          <option>Lucro Presumido</option>
+          <option>Lucro Real</option>
+          <option>MEI</option>
+        </select>
       </section>
 
       <section id="sec-natureza" class="evento-section hidden bg-white p-6 rounded-xl shadow">
         <h3 class="font-bold mb-3">Alteração de Natureza Jurídica</h3>
         <label class="block font-semibold mb-1">Nova Natureza Jurídica *</label>
-        <input data-when-visible name="novaNaturezaJuridica" class="border p-2 rounded w-full" disabled>
+        <select id="novaNaturezaJuridica" data-when-visible name="novaNaturezaJuridica" class="border p-2 rounded w-full" disabled>
+          <option value="">Selecione</option>
+          <option>Sociedade Limitada (LTDA)</option>
+          <option>Sociedade Limitada Unipessoal (SLU)</option>
+          <option>Microempreendedor Individual (MEI)</option>
+          <option>Sociedade Anônima (S/A)</option>
+          <option>Empresário Individual (EI)</option>
+        </select>
+
+        <div id="blocoAdvogadoNatureza" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold mb-1">Nome Advogado *</label>
+            <input id="nomeAdvogado" name="nomeAdvogado" class="border p-2 rounded w-full" disabled>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">CPF Advogado *</label>
+            <input id="cpfAdvogado" name="cpfAdvogado" class="border p-2 rounded w-full" disabled>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">OAB *</label>
+            <input id="oabAdvogado" name="oabAdvogado" class="border p-2 rounded w-full" disabled>
+          </div>
+        </div>
       </section>
 
       <section id="sec-forma" class="evento-section hidden bg-white p-6 rounded-xl shadow">
@@ -203,36 +250,23 @@
       </section>
 
       <section id="sec-qsa" class="evento-section hidden bg-white p-6 rounded-xl shadow">
-        <h3 class="font-bold mb-3">Alteração de Sócios (QSA)</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label class="block font-semibold mb-1">Nome *</label><input data-when-visible name="qsaNome" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Status *</label><input data-when-visible name="qsaStatus" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Endereço *</label><input data-when-visible name="qsaEndereco" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Quotas *</label><input data-when-visible name="qsaQuotas" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Estado Civil *</label><input data-when-visible name="qsaEstadoCivil" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Profissão *</label><input data-when-visible name="qsaProfissao" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Telefone *</label><input data-when-visible name="qsaTelefone" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">E-mail *</label><input data-when-visible name="qsaEmail" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Administrador *</label><input data-when-visible name="qsaAdministrador" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Responsável RFB *</label><input data-when-visible name="qsaResponsavelRfb" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Certificado Digital *</label><input data-when-visible name="qsaCertificadoDigital" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Pró-labore *</label><input data-when-visible name="qsaProLabore" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Valor *</label><input data-when-visible name="qsaValor" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Gov.br *</label><input data-when-visible name="qsaGovBr" class="border p-2 rounded w-full" disabled></div>
-          <div><label class="block font-semibold mb-1">Senha *</label><input data-when-visible type="password" name="qsaSenha" class="border p-2 rounded w-full" disabled></div>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold">Alteração de Sócios (QSA)</h3>
+          <button type="button" onclick="adicionarSocioQSA()" class="bg-blue-600 text-white px-4 py-2 rounded">+ Adicionar Sócio</button>
         </div>
+        <div id="sociosContainer"></div>
       </section>
 
       <section id="sec-atividades" class="evento-section hidden bg-white p-6 rounded-xl shadow">
         <h3 class="font-bold mb-3">Alteração de Atividades</h3>
-        <label class="block font-semibold mb-1">Atividades Excluídas *</label>
-        <textarea data-when-visible name="atividadesExcluidas" class="border p-2 rounded w-full min-h-[90px]" disabled></textarea>
-        <label class="block font-semibold mt-3 mb-1">Atividades Incluídas *</label>
-        <textarea data-when-visible name="atividadesIncluidas" class="border p-2 rounded w-full min-h-[90px]" disabled></textarea>
-        <label class="block font-semibold mt-3 mb-1">CNAE Principal *</label>
-        <input data-when-visible name="cnaePrincipalNovo" class="border p-2 rounded w-full" disabled>
-        <label class="block font-semibold mt-3 mb-1">CNAEs Secundários *</label>
-        <textarea data-when-visible name="cnaesSecundariosNovos" class="border p-2 rounded w-full min-h-[90px]" disabled></textarea>
+        <label class="block font-semibold mb-1">Atividades Excluídas</label>
+        <textarea data-when-visible data-not-required name="atividadesExcluidas" class="border p-2 rounded w-full min-h-[90px]" disabled></textarea>
+        <label class="block font-semibold mt-3 mb-1">Atividades Incluídas</label>
+        <textarea data-when-visible data-not-required name="atividadesIncluidas" class="border p-2 rounded w-full min-h-[90px]" disabled></textarea>
+        <label class="block font-semibold mt-3 mb-1">CNAE Principal</label>
+        <input data-when-visible data-not-required name="cnaePrincipalNovo" class="border p-2 rounded w-full" disabled>
+        <label class="block font-semibold mt-3 mb-1">CNAEs Secundários</label>
+        <textarea data-when-visible data-not-required name="cnaesSecundariosNovos" class="border p-2 rounded w-full min-h-[90px]" disabled></textarea>
       </section>
 
       <section id="sec-outros" class="evento-section hidden bg-white p-6 rounded-xl shadow">
@@ -244,7 +278,7 @@
       </section>
 
       <section class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-3">CheckList Documentação Necessária *</h2>
+        <h2 class="text-xl font-bold mb-3">CheckList Documentação Necessária</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
           <label class="flex items-center gap-2"><input type="checkbox" name="docChecklist" value="Certificado Digital Pessoa Física"> Certificado Digital Pessoa Física</label>
           <label class="flex items-center gap-2"><input type="checkbox" name="docChecklist" value="CNH Titular / Sócios"> CNH Titular / Sócios</label>
@@ -258,8 +292,8 @@
       </section>
 
       <section class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-2">Observações *</h2>
-        <textarea name="observacoes" required class="border p-2 rounded w-full min-h-[130px]"></textarea>
+        <h2 class="text-xl font-bold mb-2">Observações</h2>
+        <textarea name="observacoes" class="border p-2 rounded w-full min-h-[130px]"></textarea>
       </section>
 
       <div class="flex flex-col md:flex-row gap-3 justify-end">
@@ -277,9 +311,189 @@
 const usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) window.location.href = "index.html";
 
+let contadorSociosQsa = 0;
+
 function logout() {
   localStorage.removeItem("usuario");
   window.location.href = "index.html";
+}
+
+function formatarMoeda(campo) {
+  const numeros = campo.value.replace(/\D/g, "");
+  const valor = Number(numeros || 0) / 100;
+  campo.value = valor.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+function toggleCampoVencimento() {
+  const formaPagamento = document.getElementById("formaPagamento").value;
+  const bloco = document.getElementById("blocoVencimento");
+  const vencimento = document.getElementById("vencimentoBoleto");
+
+  if (formaPagamento === "Boleto") {
+    bloco.classList.remove("hidden");
+    vencimento.disabled = false;
+    vencimento.required = true;
+  } else {
+    bloco.classList.add("hidden");
+    vencimento.disabled = true;
+    vencimento.required = false;
+    vencimento.value = "";
+  }
+}
+
+function toggleNovoHonorario() {
+  const valor = document.getElementById("novoHonorario").value;
+  const bloco = document.getElementById("blocoValorHonorario");
+  const input = document.getElementById("valorHonorario");
+
+  if (valor === "Sim") {
+    bloco.classList.remove("hidden");
+    input.disabled = false;
+    input.required = true;
+  } else {
+    bloco.classList.add("hidden");
+    input.disabled = true;
+    input.required = false;
+    input.value = "";
+  }
+}
+
+function toggleBlocoAdvogadoNatureza() {
+  const natureza = document.getElementById("novaNaturezaJuridica").value;
+  const bloco = document.getElementById("blocoAdvogadoNatureza");
+  const nome = document.getElementById("nomeAdvogado");
+  const cpf = document.getElementById("cpfAdvogado");
+  const oab = document.getElementById("oabAdvogado");
+
+  if (natureza === "Sociedade Anônima (S/A)") {
+    bloco.classList.remove("hidden");
+    [nome, cpf, oab].forEach((campo) => {
+      campo.disabled = false;
+      campo.required = true;
+    });
+  } else {
+    bloco.classList.add("hidden");
+    [nome, cpf, oab].forEach((campo) => {
+      campo.disabled = true;
+      campo.required = false;
+      campo.value = "";
+    });
+  }
+}
+
+function adicionarSocioQSA() {
+  contadorSociosQsa++;
+  const id = contadorSociosQsa;
+  const container = document.getElementById("sociosContainer");
+
+  container.insertAdjacentHTML("beforeend", `
+    <div class="border p-4 rounded-lg mb-4 bg-gray-50" data-socio>
+      <h4 class="font-semibold mb-3 text-blue-800">Sócio ${id}</h4>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input data-when-visible name="qsaNome" placeholder="Nome *" class="border p-2 rounded">
+        <input data-when-visible name="qsaQuotas" placeholder="Quotas *" class="border p-2 rounded" oninput="formatarMoeda(this)">
+        <input data-when-visible name="qsaEndereco" placeholder="Endereço *" class="border p-2 rounded">
+        <input data-when-visible name="qsaStatus" placeholder="Status *" class="border p-2 rounded">
+        <input data-when-visible name="qsaEstadoCivil" placeholder="Estado Civil *" class="border p-2 rounded">
+        <input data-when-visible name="qsaProfissao" placeholder="Profissão *" class="border p-2 rounded">
+        <input data-when-visible name="qsaTelefone" placeholder="Telefone *" class="border p-2 rounded">
+        <input data-when-visible name="qsaEmail" placeholder="E-mail *" class="border p-2 rounded">
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Responsável RFB *</label>
+          <select data-when-visible name="qsaResponsavelRfb" class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Administrador *</label>
+          <select data-when-visible name="qsaAdministrador" class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Pró-labore *</label>
+          <select data-when-visible name="qsaProLabore" class="border p-2 rounded w-full" onchange="toggleProlabore(${id}, this)">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+
+        <div id="blocoValorProlabore${id}" class="hidden">
+          <label class="block text-sm font-semibold mb-1">Valor Pró-labore *</label>
+          <input data-when-visible name="qsaValorProlabore" class="border p-2 rounded w-full" oninput="formatarMoeda(this)" disabled>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Certificado Digital *</label>
+          <select data-when-visible name="qsaCertificadoDigital" class="border p-2 rounded w-full">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Acesso Gov.br *</label>
+          <select data-when-visible name="qsaGovBr" class="border p-2 rounded w-full" onchange="toggleSenhaGov(${id}, this)">
+            <option value="">Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+
+        <div id="blocoSenhaGov${id}" class="hidden">
+          <label class="block text-sm font-semibold mb-1">Senha Gov.br *</label>
+          <input data-when-visible name="qsaSenha" class="border p-2 rounded w-full" disabled>
+        </div>
+      </div>
+    </div>
+  `);
+
+  atualizarSecoes();
+}
+
+function toggleProlabore(id, select) {
+  const bloco = document.getElementById(`blocoValorProlabore${id}`);
+  const input = bloco.querySelector("input");
+
+  if (select.value === "Sim") {
+    bloco.classList.remove("hidden");
+    input.disabled = false;
+    input.required = true;
+  } else {
+    bloco.classList.add("hidden");
+    input.disabled = true;
+    input.required = false;
+    input.value = "";
+  }
+}
+
+function toggleSenhaGov(id, select) {
+  const bloco = document.getElementById(`blocoSenhaGov${id}`);
+  const input = bloco.querySelector("input");
+
+  if (select.value === "Sim") {
+    bloco.classList.remove("hidden");
+    input.disabled = false;
+    input.required = true;
+  } else {
+    bloco.classList.add("hidden");
+    input.disabled = true;
+    input.required = false;
+    input.value = "";
+  }
 }
 
 const mapaSecoes = {
@@ -309,7 +523,9 @@ function atualizarSecoes() {
       secao.classList.remove("hidden");
       campos.forEach((campo) => {
         campo.disabled = false;
-        if (campo.type !== "checkbox") campo.required = true;
+        if (campo.type !== "checkbox" && !campo.hasAttribute("data-not-required")) {
+          campo.required = true;
+        }
       });
       return;
     }
@@ -325,6 +541,8 @@ function atualizarSecoes() {
       }
     });
   });
+
+  toggleBlocoAdvogadoNatureza();
 }
 
 function coletarCamposVisiveis() {
@@ -340,7 +558,13 @@ function coletarCamposVisiveis() {
       return;
     }
 
-    dados[campo.name] = campo.value;
+    if (dados[campo.name] === undefined) {
+      dados[campo.name] = campo.value;
+    } else if (Array.isArray(dados[campo.name])) {
+      dados[campo.name].push(campo.value);
+    } else {
+      dados[campo.name] = [dados[campo.name], campo.value];
+    }
   });
 
   return dados;
@@ -353,16 +577,17 @@ function validarRegrasCustomizadas() {
     return false;
   }
 
-  const docsSelecionados = [...document.querySelectorAll('input[name="docChecklist"]')].some((item) => item.checked);
-  if (!docsSelecionados) {
-    alert("Selecione ao menos um documento no checklist.");
-    return false;
-  }
-
   return true;
 }
 
+document.getElementById("formaPagamento").addEventListener("change", toggleCampoVencimento);
+document.getElementById("novoHonorario").addEventListener("change", toggleNovoHonorario);
+document.getElementById("novaNaturezaJuridica").addEventListener("change", toggleBlocoAdvogadoNatureza);
+
 eventoChecks.forEach((check) => check.addEventListener("change", atualizarSecoes));
+
+toggleCampoVencimento();
+toggleNovoHonorario();
 atualizarSecoes();
 
 document.getElementById("formAlteracao").addEventListener("submit", async (event) => {
@@ -391,22 +616,18 @@ document.getElementById("formAlteracao").addEventListener("submit", async (event
         tipo: "alteracao",
         empresa: document.getElementById("empresa").value,
         cpf_cnpj: document.getElementById("cpf_cnpj").value,
-        grupo: document.getElementById("grupo").value,
+        grupo: document.getElementById("grupo").value || null,
         usuario_id: usuario.id,
         dados_json: dadosJson,
         status: "Pendente"
       })
     });
 
-    if (!response.ok) {
-      throw new Error("Falha ao salvar briefing");
-    }
+    if (!response.ok) throw new Error("Falha ao salvar briefing");
 
     msg.className = "font-semibold text-green-700";
     msg.innerText = "Briefing salvo com sucesso! Redirecionando...";
-    setTimeout(() => {
-      window.location.href = "historico.html";
-    }, 1000);
+    setTimeout(() => { window.location.href = "historico.html"; }, 1000);
   } catch (erro) {
     msg.className = "font-semibold text-red-700";
     msg.innerText = "Erro ao salvar briefing. Tente novamente.";
