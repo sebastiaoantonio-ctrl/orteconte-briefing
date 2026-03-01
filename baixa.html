@@ -7,121 +7,221 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-  <div class="flex min-h-screen">
-    <aside class="w-64 bg-blue-900 text-white p-5">
-      <h2 class="text-xl font-bold mb-6">Orteconte</h2>
-      <ul>
-        <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
-        <li class="mb-3 font-bold"><a href="novo.html">Novo Briefing</a></li>
-        <li class="mb-3"><a href="historico.html">Histórico</a></li>
-      </ul>
-    </aside>
 
-    <main class="flex-1 p-6 md:p-10">
-      <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-xl shadow">
-        <header class="mb-8">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-16 h-16 rounded-full border-4 border-blue-700"></div>
-            <div class="flex-1">
-              <div class="h-8 bg-blue-700"></div>
-              <div class="h-1 bg-blue-700 mt-1"></div>
-            </div>
+<div class="flex min-h-screen">
+  <aside class="w-64 bg-blue-900 text-white p-5">
+    <h2 class="text-xl font-bold mb-6">Orteconte</h2>
+    <ul>
+      <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
+      <li class="mb-3 font-bold"><a href="novo.html">Novo Briefing</a></li>
+      <li class="mb-3"><a href="historico.html">Histórico</a></li>
+      <li class="mt-6"><button onclick="logout()" class="text-red-300">Sair</button></li>
+    </ul>
+  </aside>
+
+  <main class="flex-1 p-6 md:p-10">
+    <h1 class="text-3xl font-bold mb-8">BRIEFING SOCIETÁRIO - BAIXA</h1>
+
+    <form id="formBaixa" class="space-y-8">
+      <section class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados Iniciais</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold mb-1">Tipo de Processo *</label>
+            <input name="tipoProcesso" required class="border p-2 rounded w-full">
           </div>
-          <h1 class="text-center text-4xl font-extrabold tracking-wide text-blue-800">BRIEFING SOCIETÁRIO</h1>
-        </header>
-
-        <form class="space-y-6">
-          <section>
-            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Dados Iniciais:</h2>
-            <table class="w-full border border-gray-500 border-collapse text-sm">
-              <tbody>
-                <tr>
-                  <td class="border border-gray-500 p-2 w-1/3"><label class="block">Tipo de Processo:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2 w-1/3"><label class="block">Cliente:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Valor:<input class="w-full outline-none" /></label></td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2"><label class="block">Forma de Pagamento:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Caso Boleto Vencimento:<input type="date" class="w-full outline-none" /></label></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section>
-            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Dados da Empresa:</h2>
-            <table class="w-full border border-gray-500 border-collapse text-sm">
-              <tbody>
-                <tr>
-                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Razão Social:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Grupo:<input class="w-full outline-none" /></label></td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Nome Fantasia:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">CNPJ:<input class="w-full outline-none" /></label></td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2" colspan="3"><label class="block">Endereço Comercial:<input class="w-full outline-none" /></label></td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2" colspan="2"><label class="block">Responsável RFB:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Telefone:<input class="w-full outline-none" /></label></td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2"><label class="block">E-mail:<input type="email" class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Possui Filiais:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Quanta:<input class="w-full outline-none" /></label></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section>
-            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Dados para Baixa:</h2>
-            <table class="w-full border border-gray-500 border-collapse text-sm">
-              <tbody>
-                <tr>
-                  <td class="border border-gray-500 p-2" colspan="4">
-                    <label class="block">Declarações de nossa Responsabilidade:</label>
-                    <textarea class="w-full min-h-[90px] outline-none"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2"><label class="block">Última Competência:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Possui Bens Móveis ou Imóveis:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Quantos:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2"><label class="block">Possui Leasing:<input class="w-full outline-none" /></label></td>
-                </tr>
-                <tr>
-                  <td class="border border-gray-500 p-2"><label class="block">Possui Conta Bancária:<input class="w-full outline-none" /></label></td>
-                  <td class="border border-gray-500 p-2" colspan="3"><label class="block">Possui Empréstimos ou Financiamentos:<input class="w-full outline-none" /></label></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section>
-            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Coleta de Informações:</h2>
-            <div class="border border-gray-500 p-2 text-sm">
-              <label class="block">Motivo da Baixa:</label>
-              <textarea class="w-full min-h-[80px] outline-none"></textarea>
-            </div>
-          </section>
-
-          <section>
-            <h2 class="font-bold border-b-4 border-gray-900 mb-2">Observações:</h2>
-            <div class="border border-gray-500 p-2">
-              <textarea class="w-full min-h-[220px] outline-none"></textarea>
-            </div>
-          </section>
-
-          <div class="flex justify-end gap-3 pt-4">
-            <button type="reset" class="px-5 py-2 rounded-lg border border-gray-400 text-gray-700 hover:bg-gray-100">Limpar</button>
-            <button type="submit" class="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Salvar Briefing</button>
+          <div>
+            <label class="block font-semibold mb-1">Cliente *</label>
+            <input name="cliente" required class="border p-2 rounded w-full">
           </div>
-        </form>
+          <div>
+            <label class="block font-semibold mb-1">Valor *</label>
+            <input name="valor" required oninput="formatarMoeda(this)" class="border p-2 rounded w-full" placeholder="R$ 0,00">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Forma de Pagamento *</label>
+            <select id="formaPagamento" name="formaPagamento" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Pix</option>
+              <option>Depósito</option>
+              <option>Boleto</option>
+            </select>
+          </div>
+
+          <div id="blocoVencimento" class="hidden md:col-span-2">
+            <label class="block font-semibold mb-1">Caso Boleto Vencimento *</label>
+            <input id="vencimentoBoleto" name="vencimentoBoleto" type="date" class="border p-2 rounded w-full" disabled>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados da Empresa</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Razão Social *</label>
+            <input name="razaoSocial" required class="border p-2 rounded w-full">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Grupo</label>
+            <input name="grupo" class="border p-2 rounded w-full">
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Nome Fantasia *</label>
+            <input name="nomeFantasia" required class="border p-2 rounded w-full">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">CNPJ *</label>
+            <input name="cnpj" required class="border p-2 rounded w-full">
+          </div>
+
+          <div class="md:col-span-3">
+            <label class="block font-semibold mb-1">Endereço Comercial *</label>
+            <input name="enderecoComercial" required class="border p-2 rounded w-full">
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Responsável RFB *</label>
+            <input name="responsavelRfb" required class="border p-2 rounded w-full">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Telefone *</label>
+            <input name="telefone" required class="border p-2 rounded w-full">
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">E-mail *</label>
+            <input type="email" name="email" required class="border p-2 rounded w-full">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Possui Filiais *</label>
+            <select name="possuiFiliais" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Quanta(s)</label>
+            <input name="quantidadeFiliais" class="border p-2 rounded w-full">
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados para Baixa</h2>
+
+        <div>
+          <label class="block font-semibold mb-1">Declarações de nossa Responsabilidade *</label>
+          <textarea name="declaracoesResponsabilidade" required class="border p-2 rounded w-full min-h-[100px]"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold mb-1">Última Competência *</label>
+            <input name="ultimaCompetencia" required class="border p-2 rounded w-full">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Possui Bens Móveis ou Imóveis? *</label>
+            <select name="possuiBens" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Quantos</label>
+            <input name="quantidadeBens" class="border p-2 rounded w-full">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Possui Leasing? *</label>
+            <select name="possuiLeasing" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold mb-1">Possui Conta Bancária? *</label>
+            <select name="possuiContaBancaria" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Possui Empréstimos ou Financiamentos? *</label>
+            <select name="possuiEmprestimos" required class="border p-2 rounded w-full">
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Coleta de Informações</h2>
+        <label class="block font-semibold mb-1">Motivo da Baixa *</label>
+        <textarea name="motivoBaixa" required class="border p-2 rounded w-full min-h-[120px]"></textarea>
+      </section>
+
+      <section class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Observações</h2>
+        <textarea name="observacoes" class="border p-2 rounded w-full min-h-[220px]"></textarea>
+      </section>
+
+      <div class="flex flex-wrap gap-3">
+        <button type="reset" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300">
+          Limpar
+        </button>
+        <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+          Salvar Briefing
+        </button>
       </div>
-    </main>
-  </div>
+    </form>
+  </main>
+</div>
+
+<script>
+function formatarMoeda(campo) {
+  let valor = campo.value.replace(/\D/g, "");
+  if (!valor) {
+    campo.value = "";
+    return;
+  }
+
+  valor = (parseInt(valor, 10) / 100).toFixed(2) + "";
+  valor = valor.replace(".", ",");
+  valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  campo.value = "R$ " + valor;
+}
+
+function toggleVencimentoBoleto() {
+  const formaPagamento = document.getElementById("formaPagamento");
+  const bloco = document.getElementById("blocoVencimento");
+  const input = document.getElementById("vencimentoBoleto");
+
+  if (formaPagamento.value === "Boleto") {
+    bloco.classList.remove("hidden");
+    input.disabled = false;
+    input.required = true;
+  } else {
+    bloco.classList.add("hidden");
+    input.disabled = true;
+    input.required = false;
+    input.value = "";
+  }
+}
+
+document.getElementById("formaPagamento").addEventListener("change", toggleVencimentoBoleto);
+</script>
+
+<script src="js/login.js"></script>
 </body>
 </html>
