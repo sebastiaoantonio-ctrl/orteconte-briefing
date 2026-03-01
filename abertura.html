@@ -62,7 +62,7 @@
         </div>
       </div>
 
-      <!-- ================= DADOS DA EMPRESA ================= -->
+    <!-- ================= DADOS DA EMPRESA ================= -->
 <div class="bg-white p-6 rounded-xl shadow">
   <h2 class="text-xl font-bold mb-6">Dados da Empresa</h2>
 
@@ -123,26 +123,6 @@
         <option>Lucro Real</option>
         <option>Isento</option>
       </select>
-    </div>
-
-  </div>
-
-  <!-- BLOCO ADVOGADO (SÓ PARA S/A) -->
-  <div id="blocoAdvogado" class="grid grid-cols-3 gap-6 mt-6" style="display:none;">
-
-    <div>
-      <label class="block font-semibold mb-1">Advogado *</label>
-      <input id="advogado" class="border p-2 rounded w-full">
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">CPF Advogado *</label>
-      <input id="cpfAdvogado" class="border p-2 rounded w-full">
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">OAB *</label>
-      <input id="oab" class="border p-2 rounded w-full">
     </div>
 
   </div>
@@ -259,16 +239,64 @@
 
 </div>
 
-     <!-- ================= DADOS DOS SÓCIOS ================= -->
-<div class="bg-white p-6 rounded-xl shadow">
-  <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+    <!-- BLOCO ADVOGADO (CONDICIONAL) -->
+    <div id="blocoAdvogado" class="col-span-2 grid grid-cols-3 gap-4" style="display:none;">
 
-  <div id="sociosContainer"></div>
+      <div>
+        <label class="block font-semibold mb-1">Advogado *</label>
+        <input id="advogado" class="border p-2 rounded w-full">
+      </div>
 
-  <button id="btnAdicionarSocio" type="button"
-    class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
-    + Adicionar Sócio
-  </button>
+      <div>
+        <label class="block font-semibold mb-1">CPF Advogado *</label>
+        <input id="cpfAdvogado" class="border p-2 rounded w-full">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">OAB *</label>
+        <input id="oab" class="border p-2 rounded w-full">
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+      <!-- ================= DADOS DOS SÓCIOS ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+
+        <div id="sociosContainer"></div>
+
+        <button id="btnAdicionarSocio" type="button"
+          class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
+          + Adicionar Sócio
+        </button>
+      </div>
+
+      <!-- ================= CHECKLIST ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
+
+        <div class="space-y-2">
+          <label><input type="checkbox"> CNH dos Sócios</label><br>
+          <label><input type="checkbox"> IPTU do Imóvel</label><br>
+          <label><input type="checkbox"> Contrato de Locação</label><br>
+          <label><input type="checkbox"> Certificado Digital</label>
+        </div>
+
+        <textarea placeholder="Observações"
+          class="border p-2 rounded w-full mt-4"></textarea>
+      </div>
+
+      <button type="submit"
+        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+        Salvar Briefing
+      </button>
+
+    </form>
+  </div>
+
 </div>
 
 <script>
@@ -308,14 +336,18 @@ function adicionarSocio() {
     return;
   }
 
+
   contadorSocios++;
   const id = contadorSocios;
-
   container.insertAdjacentHTML("beforeend", `
-    <div class="border p-4 rounded-lg mb-4 bg-gray-50">
-      <h3 class="font-semibold mb-3 text-blue-800">Sócio ${id}</h3>
+    <div data-socio-card class="border p-4 rounded-lg mb-4 bg-gray-50">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold text-blue-800">Sócio ${id}</h3>
+        <button type="button" onclick="removerSocio(this)" class="text-red-600 text-sm font-semibold hover:underline">Excluir sócio</button>
+      </div>
 
       <div class="grid grid-cols-2 gap-4">
+
         <input placeholder="Nome" class="border p-2 rounded">
         <input placeholder="Quotas (R$)" class="border p-2 rounded">
         <input placeholder="Endereço" class="border p-2 rounded">
@@ -325,6 +357,7 @@ function adicionarSocio() {
         <input placeholder="Telefone" class="border p-2 rounded">
         <input placeholder="E-mail" class="border p-2 rounded">
 
+        <!-- Responsável RFB -->
         <div>
           <label class="block text-sm font-semibold">Responsável RFB</label>
           <select class="border p-2 rounded w-full">
@@ -334,6 +367,7 @@ function adicionarSocio() {
           </select>
         </div>
 
+        <!-- Administrador -->
         <div>
           <label class="block text-sm font-semibold">Administrador</label>
           <select class="border p-2 rounded w-full">
@@ -343,6 +377,7 @@ function adicionarSocio() {
           </select>
         </div>
 
+        <!-- Pró-labore -->
         <div>
           <label class="block text-sm font-semibold">Pró-labore</label>
           <select onchange="toggleProlabore(${id}, this.value)"
@@ -353,12 +388,14 @@ function adicionarSocio() {
           </select>
         </div>
 
+        <!-- Valor Pró-labore -->
         <div id="valorProlabore${id}" style="display:none;">
           <label class="block text-sm font-semibold">Valor Pró-labore</label>
           <input oninput="formatarMoeda(this)"
             class="border p-2 rounded w-full">
         </div>
 
+        <!-- Certificado Digital -->
         <div>
           <label class="block text-sm font-semibold">Certificado Digital</label>
           <select class="border p-2 rounded w-full">
@@ -368,6 +405,7 @@ function adicionarSocio() {
           </select>
         </div>
 
+        <!-- Acesso Gov.br -->
         <div>
           <label class="block text-sm font-semibold">Acesso Gov.br</label>
           <select onchange="toggleGov(${id}, this.value)"
@@ -378,13 +416,23 @@ function adicionarSocio() {
           </select>
         </div>
 
+        <!-- Senha Gov -->
         <div id="senhaGov${id}" style="display:none;">
           <label class="block text-sm font-semibold">Senha Gov.br</label>
           <input class="border p-2 rounded w-full">
         </div>
+
       </div>
     </div>
-  `);
+  `;
+}
+
+function removerSocio(botao) {
+  const cardSocio = botao.closest("[data-socio-card]");
+
+  if (cardSocio) {
+    cardSocio.remove();
+  }
 }
 
 function toggleProlabore(id, valor) {
@@ -396,7 +444,6 @@ function toggleGov(id, valor) {
   const campo = document.getElementById("senhaGov" + id);
   campo.style.display = valor === "Sim" ? "block" : "none";
 }
-
 function toggleAdvogado() {
   const natureza = document.getElementById("naturezaJuridica").value;
   const bloco = document.getElementById("blocoAdvogado");
@@ -471,3 +518,5 @@ if (botaoAdicionarSocio) {
   botaoAdicionarSocio.addEventListener("click", adicionarSocio);
 }
 </script>
+</body>
+</html>
