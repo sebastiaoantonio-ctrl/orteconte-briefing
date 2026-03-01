@@ -1,565 +1,252 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Abertura de Empresa</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>Abertura de Empresa</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
 <div class="flex">
 
-  <!-- MENU -->
-  <div class="w-64 bg-blue-900 text-white min-h-screen p-5">
-    <h2 class="text-xl font-bold mb-6">Orteconte</h2>
-    <ul>
-      <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
-      <li class="mb-3 font-bold">Novo Briefing</li>
-      <li class="mb-3"><a href="historico.html">Histórico</a></li>
-    </ul>
-  </div>
+<!-- MENU -->
+<div class="w-64 bg-blue-900 text-white min-h-screen p-5">
+  <h2 class="text-xl font-bold mb-6">Orteconte</h2>
+  <ul>
+    <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
+    <li class="mb-3 font-bold">Novo Briefing</li>
+    <li class="mb-3"><a href="historico.html">Histórico</a></li>
+  </ul>
+</div>
 
-  <div class="flex-1 p-10">
-    <h1 class="text-3xl font-bold mb-8">BRIEFING SOCIETÁRIO - ABERTURA</h1>
+<div class="flex-1 p-10">
+<h1 class="text-3xl font-bold mb-8">BRIEFING SOCIETÁRIO - ABERTURA</h1>
 
-    <form class="space-y-10">
+<form id="formAbertura" class="space-y-10">
 
-      <!-- ================= DADOS INICIAIS ================= -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-6">Dados Iniciais</h2>
-
-        <div class="grid grid-cols-2 gap-6">
-
-          <div>
-            <label class="block font-semibold mb-1">Cliente *</label>
-            <input required class="border p-2 rounded w-full">
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Valor *</label>
-            <input required class="border p-2 rounded w-full">
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Forma de Pagamento *</label>
-            <select id="formaPagamento" required
-              onchange="verificarPagamento()"
-              class="border p-2 rounded w-full">
-              <option value="">Selecione</option>
-              <option>Pix</option>
-              <option>Deposito Bancário</option>
-              <option>Boleto</option>
-            </select>
-          </div>
-
-          <div id="campoVencimento" style="display:none;">
-            <label class="block font-semibold mb-1">Vencimento *</label>
-            <input id="vencimento"
-              type="date"
-              class="border p-2 rounded w-full">
-          </div>
-
-        </div>
-      </div>
-
-    <!-- ================= DADOS DA EMPRESA ================= -->
+<!-- ================= DADOS INICIAIS ================= -->
 <div class="bg-white p-6 rounded-xl shadow">
-  <h2 class="text-xl font-bold mb-6">Dados da Empresa</h2>
+<h2 class="text-xl font-bold mb-6">Dados Iniciais</h2>
 
-  <div class="grid grid-cols-2 gap-6">
+<div class="grid grid-cols-2 gap-6">
 
-    <!-- Razão Social -->
-    <div>
-      <label class="block font-semibold mb-1">Razão Social *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
+<div>
+<label class="block font-semibold mb-1">Cliente *</label>
+<input required class="border p-2 rounded w-full">
+</div>
 
-    <!-- Grupo -->
-    <div>
-      <label class="block font-semibold mb-1">Grupo</label>
-      <input class="border p-2 rounded w-full">
-    </div>
+<div>
+<label class="block font-semibold mb-1">Valor *</label>
+<input required class="border p-2 rounded w-full">
+</div>
 
-    <!-- Nome Fantasia -->
-    <div>
-      <label class="block font-semibold mb-1">Nome Fantasia *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
+<div>
+<label class="block font-semibold mb-1">Forma de Pagamento *</label>
+<select id="formaPagamento" required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Pix</option>
+<option>Deposito Bancário</option>
+<option>Boleto</option>
+</select>
+</div>
 
-    <!-- Enquadramento -->
-    <div>
-      <label class="block font-semibold mb-1">Enquadramento *</label>
-      <select required class="border p-2 rounded w-full">
-        <option value="">Selecione</option>
-        <option>MEI</option>
-        <option>ME</option>
-        <option>EPP</option>
-        <option>DEMAIS</option>
-      </select>
-    </div>
+<div id="campoVencimento" style="display:none;">
+<label class="block font-semibold mb-1">Vencimento *</label>
+<input id="vencimento" type="date" class="border p-2 rounded w-full">
+</div>
 
-    <!-- Natureza Jurídica -->
-    <div>
-      <label class="block font-semibold mb-1">Natureza Jurídica *</label>
-      <select id="naturezaJuridica"
-              required
-              onchange="toggleAdvogado()"
-              class="border p-2 rounded w-full">
-        <option value="">Selecione</option>
-        <option>Sociedade Limitada (LTDA)</option>
-        <option>Sociedade Limitada Unipessoal (SLU)</option>
-        <option>Microempreendedor Individual (MEI)</option>
-        <option>Sociedade Anônima (S/A)</option>
-      </select>
-    </div>
+</div>
+</div>
 
-    <!-- Regime Tributário -->
-    <div>
-      <label class="block font-semibold mb-1">Regime Tributário *</label>
-      <select required class="border p-2 rounded w-full">
-        <option value="">Selecione</option>
-        <option>Simples Nacional</option>
-        <option>Lucro Presumido</option>
-        <option>Lucro Real</option>
-        <option>Isento</option>
-      </select>
-    </div>
+<!-- ================= DADOS DA EMPRESA ================= -->
+<div class="bg-white p-6 rounded-xl shadow">
+<h2 class="text-xl font-bold mb-6">Dados da Empresa</h2>
 
-  </div>
+<div class="grid grid-cols-2 gap-6">
 
-  <!-- FORMA DE ATUAÇÃO -->
-  <h3 class="font-semibold mt-8 mb-3">Forma de Atuação *</h3>
+<div>
+<label>Razão Social *</label>
+<input required class="border p-2 rounded w-full">
+</div>
 
-  <div class="grid grid-cols-3 gap-3 text-sm">
-    <label><input type="checkbox"> Estabelecimento Fixo</label>
-    <label><input type="checkbox"> Televendas</label>
-    <label><input type="checkbox"> Local Fixo Fora da Loja</label>
-    <label><input type="checkbox"> Internet</label>
-    <label><input type="checkbox"> Correios</label>
-    <label><input type="checkbox"> Porta a Porta / Postos Móveis</label>
-    <label><input type="checkbox"> Máquinas Automáticas</label>
-    <label><input type="checkbox"> Atividades Fora do Estabelecimento</label>
-  </div>
+<div>
+<label>Grupo</label>
+<input class="border p-2 rounded w-full">
+</div>
 
-  <!-- Alvará e Licitações -->
-  <div class="grid grid-cols-2 gap-6 mt-6">
+<div>
+<label>Nome Fantasia *</label>
+<input required class="border p-2 rounded w-full">
+</div>
 
-    <div>
-      <label class="block font-semibold mb-1">Alvará *</label>
-      <select required class="border p-2 rounded w-full">
-        <option value="">Selecione</option>
-        <option>Sim</option>
-        <option>Não</option>
-      </select>
-    </div>
+<div>
+<label>Enquadramento *</label>
+<select required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>MEI</option>
+<option>ME</option>
+<option>EPP</option>
+<option>DEMAIS</option>
+</select>
+</div>
 
-    <div>
-      <label class="block font-semibold mb-1">Licitações *</label>
-      <select required class="border p-2 rounded w-full">
-        <option value="">Selecione</option>
-        <option>Sim</option>
-        <option>Não</option>
-      </select>
-    </div>
+<div>
+<label>Natureza Jurídica *</label>
+<select id="naturezaJuridica" required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Sociedade Limitada (LTDA)</option>
+<option>Sociedade Limitada Unipessoal (SLU)</option>
+<option>Microempreendedor Individual (MEI)</option>
+<option>Sociedade Anônima (S/A)</option>
+</select>
+</div>
 
-  </div>
-
-  <!-- Endereço -->
-  <div class="mt-6">
-    <label class="block font-semibold mb-1">Endereço Completo *</label>
-    <input required class="border p-2 rounded w-full">
-  </div>
-
-  <!-- Atividades -->
-  <div class="mt-6">
-    <label class="block font-semibold mb-1">Atividades Desenvolvidas *</label>
-    <textarea required class="border p-2 rounded w-full"></textarea>
-  </div>
-
-  <!-- CNAEs -->
-  <div class="grid grid-cols-2 gap-6 mt-6">
-
-    <div>
-      <label class="block font-semibold mb-1">CNAE Principal *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">CNAEs Secundários</label>
-      <input class="border p-2 rounded w-full">
-    </div>
-
-  </div>
-
-  <!-- Contato -->
-  <div class="grid grid-cols-3 gap-6 mt-6">
-
-    <div>
-      <label class="block font-semibold mb-1">Responsável RFB *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">Telefone *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">E-mail *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
-
-  </div>
-
-  <!-- Financeiro -->
-  <div class="grid grid-cols-3 gap-6 mt-6">
-
-    <div>
-      <label class="block font-semibold mb-1">Honorário *</label>
-      <input required oninput="formatarMoeda(this)"
-        class="border p-2 rounded w-full">
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">Vencimento *</label>
-      <select required class="border p-2 rounded w-full">
-        <option value="">Selecione</option>
-        <option>06</option>
-        <option>10</option>
-        <option>20</option>
-      </select>
-    </div>
-
-    <div>
-      <label class="block font-semibold mb-1">Usuário Externo *</label>
-      <input required class="border p-2 rounded w-full">
-    </div>
-
-  </div>
+<div>
+<label>Regime Tributário *</label>
+<select required class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Simples Nacional</option>
+<option>Lucro Presumido</option>
+<option>Lucro Real</option>
+<option>Isento</option>
+</select>
+</div>
 
 </div>
 
-    <!-- BLOCO ADVOGADO (CONDICIONAL) -->
-    <div id="blocoAdvogado" class="col-span-2 grid grid-cols-3 gap-4" style="display:none;">
+<!-- BLOCO ADVOGADO -->
+<div id="blocoAdvogado" class="grid grid-cols-3 gap-6 mt-6" style="display:none;">
+<div>
+<label>Advogado *</label>
+<input id="advogado" class="border p-2 rounded w-full">
+</div>
+<div>
+<label>CPF Advogado *</label>
+<input id="cpfAdvogado" class="border p-2 rounded w-full">
+</div>
+<div>
+<label>OAB *</label>
+<input id="oab" class="border p-2 rounded w-full">
+</div>
+</div>
 
-      <div>
-       (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/abertura.html b/abertura.html
-index 81b8bae4949662beab1cbba44b6798adac704683..212e750a588572f6c37dc048c64b0463f1390823 100644
---- a/abertura.html
-+++ b/abertura.html
-@@ -246,202 +246,310 @@
-         <label class="block font-semibold mb-1">Advogado *</label>
-         <input id="advogado" class="border p-2 rounded w-full">
-       </div>
- 
-       <div>
-         <label class="block font-semibold mb-1">CPF Advogado *</label>
-         <input id="cpfAdvogado" class="border p-2 rounded w-full">
-       </div>
- 
-       <div>
-         <label class="block font-semibold mb-1">OAB *</label>
-         <input id="oab" class="border p-2 rounded w-full">
-       </div>
- 
-     </div>
- 
-   </div>
- </div>
- 
-       <!-- ================= DADOS DOS SÓCIOS ================= -->
-       <div class="bg-white p-6 rounded-xl shadow">
-         <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
- 
-         <div id="sociosContainer"></div>
- 
-+        <button id="btnAdicionarSocio" type="button" onclick="adicionarSocio()"
-           class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
-           + Adicionar Sócio
-         </button>
-       </div>
- 
-       <!-- ================= CHECKLIST ================= -->
-       <div class="bg-white p-6 rounded-xl shadow">
-         <h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
- 
-         <div class="space-y-2">
-           <label><input type="checkbox"> CNH dos Sócios</label><br>
-           <label><input type="checkbox"> IPTU do Imóvel</label><br>
-           <label><input type="checkbox"> Contrato de Locação</label><br>
-           <label><input type="checkbox"> Certificado Digital</label>
-         </div>
- 
-         <textarea placeholder="Observações"
-           class="border p-2 rounded w-full mt-4"></textarea>
-       </div>
- 
-       <button type="submit"
-         class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
-         Salvar Briefing
-       </button>
- 
-     </form>
-   </div>
- 
- </div>
- 
- <script>
-+let contadorSocios = 0;
-+
- function verificarPagamento() {
-+  const formaPagamento = document.getElementById("formaPagamento");
-+  const campoVencimento = document.getElementById("campoVencimento");
-   const vencimento = document.getElementById("vencimento");
- 
-+  if (!formaPagamento || !campoVencimento || !vencimento) {
-+    return;
-+  }
-+
-+  if (formaPagamento.value === "Boleto") {
-+    campoVencimento.style.display = "block";
-     vencimento.required = true;
-   } else {
-+    campoVencimento.style.display = "none";
-     vencimento.required = false;
-+    vencimento.setCustomValidity("");
-     vencimento.value = "";
-   }
- }
- 
- function formatarMoeda(campo) {
-   let valor = campo.value.replace(/\D/g, "");
-   valor = (valor / 100).toFixed(2) + "";
-   valor = valor.replace(".", ",");
-   valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-   campo.value = "R$ " + valor;
- }
- 
- function adicionarSocio() {
-+  const container = document.getElementById("sociosContainer");
-+
-+  if (!container) {
-+    return;
-+  }
- 
-   contadorSocios++;
-   const id = contadorSocios;
- 
-+  container.insertAdjacentHTML("beforeend", `
-+    <div data-socio-card class="border p-4 rounded-lg mb-4 bg-gray-50">
-+      <div class="flex items-center justify-between mb-3">
-+        <h3 class="font-semibold text-blue-800">Sócio ${id}</h3>
-+        <button type="button" onclick="removerSocio(this)" class="text-red-600 text-sm font-semibold hover:underline">Excluir sócio</button>
-+      </div>
- 
-       <div class="grid grid-cols-2 gap-4">
- 
-         <input placeholder="Nome" class="border p-2 rounded">
-         <input placeholder="Quotas (R$)" class="border p-2 rounded">
-         <input placeholder="Endereço" class="border p-2 rounded">
-         <input placeholder="Status" class="border p-2 rounded">
-         <input placeholder="Estado Civil" class="border p-2 rounded">
-         <input placeholder="Profissão" class="border p-2 rounded">
-         <input placeholder="Telefone" class="border p-2 rounded">
-         <input placeholder="E-mail" class="border p-2 rounded">
- 
--        <!-- Responsável RFB -->
-         <div>
-           <label class="block text-sm font-semibold">Responsável RFB</label>
-           <select class="border p-2 rounded w-full">
-             <option value="">Selecione</option>
-             <option>Sim</option>
-             <option>Não</option>
-           </select>
-         </div>
- 
-         <div>
-           <label class="block text-sm font-semibold">Administrador</label>
-           <select class="border p-2 rounded w-full">
-             <option value="">Selecione</option>
-             <option>Sim</option>
-             <option>Não</option>
-           </select>
-         </div>
- 
-         <div>
-           <label class="block text-sm font-semibold">Pró-labore</label>
-+          <select onchange="toggleProlabore(${id}, this.value)" class="border p-2 rounded w-full">
-             <option value="">Selecione</option>
-             <option>Sim</option>
-             <option>Não</option>
-           </select>
-         </div>
- 
-         <div id="valorProlabore${id}" style="display:none;">
-           <label class="block text-sm font-semibold">Valor Pró-labore</label>
-+          <input oninput="formatarMoeda(this)" class="border p-2 rounded w-full">
-         </div>
- 
-         <div>
-           <label class="block text-sm font-semibold">Certificado Digital</label>
-           <select class="border p-2 rounded w-full">
-             <option value="">Selecione</option>
-             <option>Sim</option>
-             <option>Não</option>
-           </select>
-         </div>
- 
-         <div>
-           <label class="block text-sm font-semibold">Acesso Gov.br</label>
-+          <select onchange="toggleGov(${id}, this.value)" class="border p-2 rounded w-full">
-             <option value="">Selecione</option>
-             <option>Sim</option>
-             <option>Não</option>
-           </select>
-         </div>
- 
-         <div id="senhaGov${id}" style="display:none;">
-           <label class="block text-sm font-semibold">Senha Gov.br</label>
-           <input class="border p-2 rounded w-full">
-         </div>
- 
-       </div>
-     </div>
-+  `);
-+}
-+
-+function removerSocio(botao) {
-+  const cardSocio = botao.closest("[data-socio-card]");
-+
-+  if (cardSocio) {
-+    cardSocio.remove();
-+  }
- }
- 
- function toggleProlabore(id, valor) {
-   const campo = document.getElementById("valorProlabore" + id);
-+  if (campo) {
-+    campo.style.display = valor === "Sim" ? "block" : "none";
-+  }
- }
- 
- function toggleGov(id, valor) {
-   const campo = document.getElementById("senhaGov" + id);
-+  if (campo) {
-+    campo.style.display = valor === "Sim" ? "block" : "none";
-+  }
- }
-+
- function toggleAdvogado() {
-+  const naturezaJuridica = document.getElementById("naturezaJuridica");
-   const bloco = document.getElementById("blocoAdvogado");
-   const advogado = document.getElementById("advogado");
-   const cpf = document.getElementById("cpfAdvogado");
-   const oab = document.getElementById("oab");
- 
-+  if (!naturezaJuridica || !bloco || !advogado || !cpf || !oab) {
-+    return;
-+  }
-+
-+  if (naturezaJuridica.value === "Sociedade Anônima (S/A)") {
-     bloco.style.display = "grid";
-     advogado.required = true;
-     cpf.required = true;
-     oab.required = true;
-   } else {
-     bloco.style.display = "none";
-     advogado.required = false;
-     cpf.required = false;
-     oab.required = false;
-+    advogado.setCustomValidity("");
-+    cpf.setCustomValidity("");
-+    oab.setCustomValidity("");
-+    advogado.value = "";
-+    cpf.value = "";
-+    oab.value = "";
-+  }
-+}
-+
-+function validarFormulario(event) {
-+  const formulario = document.querySelector("form");
-+  const formaPagamento = document.getElementById("formaPagamento");
-+  const vencimento = document.getElementById("vencimento");
-+  const naturezaJuridica = document.getElementById("naturezaJuridica");
-+  const advogado = document.getElementById("advogado");
-+  const cpf = document.getElementById("cpfAdvogado");
-+  const oab = document.getElementById("oab");
-+
-+  if (!formulario || !formaPagamento || !vencimento || !naturezaJuridica || !advogado || !cpf || !oab) {
-+    return;
-+  }
-+
-+  vencimento.setCustomValidity("");
-+  advogado.setCustomValidity("");
-+  cpf.setCustomValidity("");
-+  oab.setCustomValidity("");
-+
-+  if (formaPagamento.value === "Boleto" && !vencimento.value) {
-+    vencimento.setCustomValidity("Informe o vencimento para pagamento via boleto.");
-+  }
-+
-+  if (naturezaJuridica.value === "Sociedade Anônima (S/A)") {
-+    const cpfLimpo = cpf.value.replace(/\D/g, "");
-+
-+    if (!advogado.value.trim()) {
-+      advogado.setCustomValidity("Informe o nome do advogado.");
-+    }
-+
-+    if (cpfLimpo.length !== 11) {
-+      cpf.setCustomValidity("Informe um CPF válido com 11 dígitos.");
-+    }
-+
-+    if (!oab.value.trim()) {
-+      oab.setCustomValidity("Informe o número da OAB.");
-+    }
-+  }
-+
-+  if (!formulario.checkValidity()) {
-+    event.preventDefault();
-+    formulario.reportValidity();
-   }
- }
-+
-+function inicializarFormulario() {
-+  const formulario = document.querySelector("form");
-+  const botaoAdicionarSocio = document.getElementById("btnAdicionarSocio");
-+  const formaPagamento = document.getElementById("formaPagamento");
-+  const naturezaJuridica = document.getElementById("naturezaJuridica");
-+
-+  if (formulario) {
-+    formulario.addEventListener("submit", validarFormulario);
-+  }
-+
-+
-+  if (formaPagamento) {
-+    formaPagamento.addEventListener("change", verificarPagamento);
-+  }
-+
-+  if (naturezaJuridica) {
-+    naturezaJuridica.addEventListener("change", toggleAdvogado);
-+  }
-+
-+  verificarPagamento();
-+  toggleAdvogado();
-+}
-+
-+window.verificarPagamento = verificarPagamento;
-+window.toggleAdvogado = toggleAdvogado;
-+window.adicionarSocio = adicionarSocio;
-+window.removerSocio = removerSocio;
-+window.toggleProlabore = toggleProlabore;
-+window.toggleGov = toggleGov;
-+window.formatarMoeda = formatarMoeda;
-+
-+if (document.readyState === "loading") {
-+  document.addEventListener("DOMContentLoaded", inicializarFormulario);
-+} else {
-+  inicializarFormulario();
-+}
-+</script>
-+</body>
-+</html>
- 
-EOF
-)
+</div>
+
+<!-- ================= DADOS DOS SÓCIOS ================= -->
+<div class="bg-white p-6 rounded-xl shadow">
+<h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+
+<div id="sociosContainer"></div>
+
+<button type="button" onclick="adicionarSocio()"
+class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
++ Adicionar Sócio
+</button>
+</div>
+
+<button type="submit"
+class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+Salvar Briefing
+</button>
+
+</form>
+</div>
+</div>
+
+<script>
+let contadorSocios = 0;
+
+document.getElementById("formaPagamento").addEventListener("change", function(){
+const campo = document.getElementById("campoVencimento");
+campo.style.display = this.value === "Boleto" ? "block" : "none";
+});
+
+document.getElementById("naturezaJuridica").addEventListener("change", function(){
+const bloco = document.getElementById("blocoAdvogado");
+bloco.style.display = this.value === "Sociedade Anônima (S/A)" ? "grid" : "none";
+});
+
+function formatarMoeda(campo){
+let valor = campo.value.replace(/\D/g,'');
+valor = (valor/100).toFixed(2)+'';
+valor = valor.replace(".",",");
+valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+campo.value = "R$ "+valor;
+}
+
+function adicionarSocio(){
+contadorSocios++;
+const container = document.getElementById("sociosContainer");
+
+container.insertAdjacentHTML("beforeend",`
+<div class="border p-4 rounded-lg mb-4 bg-gray-50">
+<h3 class="font-semibold text-blue-800 mb-3">Sócio ${contadorSocios}</h3>
+
+<div class="grid grid-cols-2 gap-4">
+
+<input placeholder="Nome" class="border p-2 rounded">
+<input placeholder="Quotas (R$)" class="border p-2 rounded">
+
+<div>
+<label>Responsável RFB</label>
+<select class="border p-2 rounded w-full">
+<option>Sim</option><option>Não</option>
+</select>
+</div>
+
+<div>
+<label>Administrador</label>
+<select class="border p-2 rounded w-full">
+<option>Sim</option><option>Não</option>
+</select>
+</div>
+
+<div>
+<label>Pró-labore</label>
+<select onchange="toggleProlabore(${contadorSocios},this.value)"
+class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Sim</option>
+<option>Não</option>
+</select>
+</div>
+
+<div id="valorProlabore${contadorSocios}" style="display:none;">
+<label>Valor Pró-labore</label>
+<input oninput="formatarMoeda(this)"
+class="border p-2 rounded w-full">
+</div>
+
+<div>
+<label>Acesso Gov.br</label>
+<select onchange="toggleGov(${contadorSocios},this.value)"
+class="border p-2 rounded w-full">
+<option value="">Selecione</option>
+<option>Sim</option>
+<option>Não</option>
+</select>
+</div>
+
+<div id="senhaGov${contadorSocios}" style="display:none;">
+<label>Senha Gov.br</label>
+<input class="border p-2 rounded w-full">
+</div>
+
+</div>
+</div>
+`);
+}
+
+function toggleProlabore(id,valor){
+const campo = document.getElementById("valorProlabore"+id);
+if(campo) campo.style.display = valor==="Sim"?"block":"none";
+}
+
+function toggleGov(id,valor){
+const campo = document.getElementById("senhaGov"+id);
+if(campo) campo.style.display = valor==="Sim"?"block":"none";
+}
+</script>
+
+</body>
+</html>
