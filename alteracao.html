@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Briefing Societário - Alteração</title>
+  <style>
+    :root {
+      --azul: #4f678c;
+      --borda: #333;
+      --fundo: #f4f4f4;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--fundo);
+      color: #111;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border: 1px solid #dcdcdc;
+    }
+
+    .topo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .topo .marca {
+      font-size: 30px;
+      font-weight: bold;
+      color: var(--azul);
+      letter-spacing: 0.5px;
+    }
+
+    .topo .linha {
+      height: 44px;
+      flex: 1;
+      background: var(--azul);
+    }
+
+    h1 {
+      text-align: center;
+      margin: 24px 0;
+      font-size: 52px;
+      letter-spacing: 2px;
+      color: var(--azul);
+    }
+
+    .secao {
+      border-top: 4px solid #111;
+      margin-top: 14px;
+      padding-top: 8px;
+    }
+
+    .titulo-secao {
+      font-size: 30px;
+      margin: 0 0 8px;
+    }
+
+    .subtitulo {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .orientacao {
+      font-size: 14px;
+      margin: 4px 0 8px;
+      color: #444;
+      font-style: italic;
+    }
+
+    .grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .g-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    label { font-size: 14px; display: block; margin-bottom: 4px; }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--borda);
+      min-height: 38px;
+      padding: 8px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    .eventos {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px 16px;
+    }
+
+    .evento-item,
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #ddd;
+      min-height: 38px;
+      padding: 6px 8px;
+      font-size: 14px;
+    }
+
+    .evento-item input,
+    .check-item input { width: auto; min-height: auto; }
+
+    .evento-section {
+      display: none;
+      border-top: 2px solid #111;
+      margin-top: 14px;
+      padding-top: 8px;
+    }
+
+    .rodape {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    button {
+      border: 0;
+      background: var(--azul);
+      color: #fff;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      h1 { font-size: 34px; }
+      .eventos, .g-4, .g-3, .g-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topo">
+      <div class="marca">Orteconte Contabilidade</div>
+      <div class="linha"></div>
+    </div>
+
+    <h1>BRIEFING SOCIETÁRIO</h1>
+
+    <form id="formAlteracao">
+      <section class="secao">
+        <h2 class="titulo-secao">Dados Iniciais</h2>
+        <div class="grid g-3">
+          <div>
+            <label for="tipoProcesso">Tipo de Processo *</label>
+            <input id="tipoProcesso" name="tipoProcesso" required>
+          </div>
+          <div>
+            <label for="cliente">Cliente *</label>
+            <input id="cliente" name="cliente" required>
+          </div>
+          <div>
+            <label for="valor">Valor *</label>
+            <input id="valor" name="valor" required>
+          </div>
+          <div>
+            <label for="formaPagamento">Forma de Pagamento *</label>
+            <input id="formaPagamento" name="formaPagamento" required>
+          </div>
+          <div>
+            <label for="vencimentoBoleto">Caso Boleto - Vencimento *</label>
+            <input id="vencimentoBoleto" name="vencimentoBoleto" type="date" required>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao">
+        <h2 class="titulo-secao">Eventos de Alteração</h2>
+        <p class="orientacao">Marque as opções necessárias. As seções abaixo só serão exibidas conforme os eventos selecionados.</p>
+        <div class="eventos">
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="razao" name="eventos" required> Alteração de Razão Social</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="capital" name="eventos"> Alteração de Capital Social</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="resp-rfb" name="eventos"> Representante da Pessoa Jurídica</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="endereco" name="eventos"> Alteração de Endereço Comercial</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="qsa" name="eventos"> QSA</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="natureza" name="eventos"> Natureza Jurídica</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="atividades" name="eventos"> Atividades Econômicas</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="fantasia" name="eventos"> Nome Fantasia</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="regime" name="eventos"> Regime Tributário</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="forma" name="eventos"> Forma de Atuação</label>
+          <label class="evento-item"><input type="checkbox" class="evento-check" value="outros" name="eventos"> Outros</label>
+        </div>
+      </section>
+
+      <section class="secao">
+        <h2 class="titulo-secao">Dados da Empresa</h2>
+        <p class="orientacao"><strong>Orientação:</strong> informe nesta seção os <strong>dados atuais da empresa (antes da alteração)</strong>.</p>
+        <div class="grid g-3">
+          <div><label>Razão Social *</label><input required name="empresaRazao"></div>
+          <div><label>Grupo *</label><input required name="empresaGrupo"></div>
+          <div><label>CNPJ *</label><input required name="empresaCnpj"></div>
+          <div><label>Nome Fantasia *</label><input required name="empresaFantasia"></div>
+          <div><label>Natureza Jurídica *</label><input required name="empresaNatureza"></div>
+          <div><label>Regime Tributário *</label><input required name="empresaRegime"></div>
+          <div><label>Enquadramento *</label><input required name="empresaEnquadramento"></div>
+          <div><label>Capital Social *</label><input required name="empresaCapital"></div>
+          <div><label>Telefone *</label><input required name="empresaTelefone"></div>
+          <div><label>E-mail *</label><input required name="empresaEmail" type="email"></div>
+          <div><label>Responsável RFB *</label><input required name="empresaRfb"></div>
+          <div><label>Novo Honorário *</label><input required name="empresaHonorario"></div>
+          <div><label>Valor *</label><input required name="empresaValor"></div>
+        </div>
+        <div style="margin-top:8px;"><label>Endereço Comercial *</label><input required name="empresaEndereco"></div>
+        <div style="margin-top:8px;"><label>Objeto Social *</label><textarea required name="empresaObjeto"></textarea></div>
+      </section>
+
+      <section class="secao">
+        <h2 class="titulo-secao">Orientações</h2>
+        <textarea required name="orientacoesGerais" placeholder="Descreva a alteração"></textarea>
+      </section>
+
+      <section id="sec-razao" class="evento-section">
+        <h3 class="subtitulo">Alteração de Razão Social</h3>
+        <label>Nova Razão Social *</label>
+        <input data-when-visible name="novaRazao">
+      </section>
+
+      <section id="sec-fantasia" class="evento-section">
+        <h3 class="subtitulo">Alteração de Nome Fantasia</h3>
+        <label>Novo Nome Fantasia *</label>
+        <input data-when-visible name="novoFantasia">
+      </section>
+
+      <section id="sec-endereco" class="evento-section">
+        <h3 class="subtitulo">Alteração de Endereço</h3>
+        <label>Novo Endereço *</label>
+        <input data-when-visible name="novoEndereco">
+      </section>
+
+      <section id="sec-capital" class="evento-section">
+        <h3 class="subtitulo">Alteração de Capital Social</h3>
+        <label>Novo Capital Social *</label>
+        <input data-when-visible name="novoCapital">
+      </section>
+
+      <section id="sec-resp-rfb" class="evento-section">
+        <h3 class="subtitulo">Alteração Responsável RFB</h3>
+        <label>Novo Responsável RFB *</label>
+        <input data-when-visible name="novoRfb">
+      </section>
+
+      <section id="sec-regime" class="evento-section">
+        <h3 class="subtitulo">Alteração de Regime Tributário</h3>
+        <label>Novo Regime Tributário *</label>
+        <input data-when-visible name="novoRegime">
+      </section>
+
+      <section id="sec-natureza" class="evento-section">
+        <h3 class="subtitulo">Alteração de Natureza Jurídica</h3>
+        <label>Nova Natureza Jurídica *</label>
+        <input data-when-visible name="novaNatureza">
+      </section>
+
+      <section id="sec-forma" class="evento-section">
+        <h3 class="subtitulo">Alteração da Forma de Atuação</h3>
+        <div class="grid g-3">
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Estabelecimento Fixo"> Estabelecimento Fixo</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Televendas"> Televendas</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Capital Social"> Capital Social</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Correios"> Correios</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Porta a Porta / Postos Móveis"> Porta a Porta / Postos Móveis</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="QSA"> QSA</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Internet"> Internet</label>
+          <label class="check-item"><input type="checkbox" data-when-visible name="formaAtuacao" value="Atividades Fora do Estabelecimento"> Atividades Desenvolvidas Fora do Estabelecimento</label>
+        </div>
+      </section>
+
+      <section id="sec-qsa" class="evento-section">
+        <h3 class="subtitulo">Alteração de Sócios (QSA)</h3>
+        <div class="grid g-2">
+          <div><label>Nome do Sócio *</label><input data-when-visible name="qsaNome"></div>
+          <div><label>Status *</label><input data-when-visible name="qsaStatus"></div>
+          <div><label>Endereço *</label><input data-when-visible name="qsaEndereco"></div>
+          <div><label>Quotas *</label><input data-when-visible name="qsaQuotas"></div>
+          <div><label>Estado Civil *</label><input data-when-visible name="qsaEstadoCivil"></div>
+          <div><label>Profissão *</label><input data-when-visible name="qsaProfissao"></div>
+          <div><label>Telefone *</label><input data-when-visible name="qsaTelefone"></div>
+          <div><label>E-mail *</label><input data-when-visible name="qsaEmail"></div>
+          <div><label>Administrador *</label><input data-when-visible name="qsaAdministrador"></div>
+          <div><label>Responsável RFB *</label><input data-when-visible name="qsaRfb"></div>
+          <div><label>Certificado Digital *</label><input data-when-visible name="qsaCertificado"></div>
+          <div><label>Pró-labore *</label><input data-when-visible name="qsaProlabore"></div>
+          <div><label>Valor *</label><input data-when-visible name="qsaValor"></div>
+          <div><label>Gov.br *</label><input data-when-visible name="qsaGov"></div>
+          <div><label>Senha *</label><input data-when-visible name="qsaSenha" type="password"></div>
+        </div>
+      </section>
+
+      <section id="sec-atividades" class="evento-section">
+        <h3 class="subtitulo">Alteração de Atividades</h3>
+        <label>Atividades Excluídas *</label>
+        <textarea data-when-visible name="atividadesExcluidas"></textarea>
+        <label style="margin-top:8px;">Atividades Incluídas *</label>
+        <textarea data-when-visible name="atividadesIncluidas"></textarea>
+        <label style="margin-top:8px;">CNAE Principal *</label>
+        <input data-when-visible name="atividadesCnaePrincipal">
+        <label style="margin-top:8px;">CNAEs Secundários *</label>
+        <textarea data-when-visible name="atividadesCnaeSec"></textarea>
+      </section>
+
+      <section id="sec-outros" class="evento-section">
+        <h3 class="subtitulo">Outro Tipo de Alteração Não Especificada</h3>
+        <label>Título *</label>
+        <input data-when-visible name="outroTitulo">
+        <label style="margin-top:8px;">Descreva a Alteração *</label>
+        <textarea data-when-visible name="outroDescricao"></textarea>
+      </section>
+
+      <section class="secao">
+        <h2 class="titulo-secao">Checklist Documentação Necessária</h2>
+        <div class="grid g-2">
+          <label class="check-item"><input type="checkbox" name="docChecklist" required> Certificado Digital Pessoa Física</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> CNH Titular / Sócios</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> Certificado Digital Pessoa Jurídica</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> IPTU do Imóvel</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> Senha Acesso ao Gov.br</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> Contrato de Locação</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> Alvará Vigilância Sanitária</label>
+          <label class="check-item"><input type="checkbox" name="docChecklist"> Certidão Inteiro Teor do Imóvel</label>
+        </div>
+      </section>
+
+      <section class="secao">
+        <h2 class="titulo-secao">Observações</h2>
+        <textarea required name="observacoes"></textarea>
+      </section>
+
+      <div class="rodape">
+        <button type="reset">Limpar</button>
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const mapaSecoes = {
+      razao: 'sec-razao',
+      fantasia: 'sec-fantasia',
+      endereco: 'sec-endereco',
+      capital: 'sec-capital',
+      'resp-rfb': 'sec-resp-rfb',
+      regime: 'sec-regime',
+      natureza: 'sec-natureza',
+      forma: 'sec-forma',
+      qsa: 'sec-qsa',
+      atividades: 'sec-atividades',
+      outros: 'sec-outros'
+    };
+
+    const eventoChecks = document.querySelectorAll('.evento-check');
+
+    function atualizarSecoes() {
+      eventoChecks.forEach((check) => {
+        const secaoId = mapaSecoes[check.value];
+        if (!secaoId) return;
+        const secao = document.getElementById(secaoId);
+        const campos = secao.querySelectorAll('[data-when-visible]');
+        if (check.checked) {
+          secao.style.display = 'block';
+          campos.forEach((c) => {
+            c.disabled = false;
+            if (c.type !== 'checkbox') c.required = true;
+          });
+        } else {
+          secao.style.display = 'none';
+          campos.forEach((c) => {
+            c.required = false;
+            c.disabled = true;
+            if (c.type === 'checkbox') c.checked = false;
+            else c.value = '';
+          });
+        }
+      });
+    }
+
+    eventoChecks.forEach((check) => check.addEventListener('change', atualizarSecoes));
+    atualizarSecoes();
+
+    document.getElementById('formAlteracao').addEventListener('submit', (e) => {
+      const eventosMarcados = [...eventoChecks].some((c) => c.checked);
+      if (!eventosMarcados) {
+        e.preventDefault();
+        alert('Selecione ao menos um evento de alteração.');
+        return;
+      }
+
+      const docs = document.querySelectorAll('input[name="docChecklist"]');
+      const algumDoc = [...docs].some((d) => d.checked);
+      if (!algumDoc) {
+        e.preventDefault();
+        alert('Selecione ao menos um documento no checklist.');
+      }
+    });
+  </script>
+</body>
+</html>
