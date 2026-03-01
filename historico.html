@@ -395,6 +395,63 @@ function adicionarRodapeTodasPaginas(ctx) {
   }
 }
 
+
+  function gerarPdfBriefing(item) {
+  if (!item || typeof item !== "object") {
+    alert("Não foi possível gerar o PDF deste registro.");
+    return;
+  }
+
+  const tipo = valorSeguro(item.tipo).toUpperCase();
+
+  try {
+    switch (tipo) {
+      case "ABERTURA":
+        gerarPdfAbertura(item);
+        break;
+      default:
+        gerarPdfResumo(item, tipo);
+        break;
+    }
+  } catch (erro) {
+    console.error("Erro ao gerar PDF:", erro);
+    alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+  }
+}
+
+function gerarPdfResumo(item, tipo) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const ctx = criarContextoPdf(doc, tipo || "BRIEFING");
+
+  desenharCabecalhoPdf(ctx);
+
+  desenharTituloSecao(ctx, "Dados Gerais");
+  desenharCamposEmLinha(ctx, [
+    { label: "Tipo", valor: item.tipo, proporcao: 0.34 },
+    { label: "Empresa", valor: item.empresa, proporcao: 0.33 },
+    { label: "Status", valor: item.status, proporcao: 0.33 }
+  ]);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "Criado em", valor: new Date(item.criado_em).toLocaleString(), proporcao: 1.0 }
+  ]);
+
+  const dados = item.dados_json && typeof item.dados_json === "object"
+    ? JSON.stringify(item.dados_json, null, 2)
+    : "Sem detalhes adicionais.";
+
+  desenharTituloSecao(ctx, "Conteúdo do Briefing");
+  desenharCaixaTexto(ctx, "dados_json", dados);
+
+  adicionarRodapeTodasPaginas(ctx);
+
+  const empresa = valorSeguro(item.empresa)
+    .replace(/[^a-z0-9]/gi, "_")
+    .toLowerCase();
+  doc.save(`briefing_${valorSeguro(tipo).toLowerCase()}_${empresa}.pdf`);
+}
+  
 function gerarPdfAbertura(item) {
 
   const { jsPDF } = window.jspdf;
