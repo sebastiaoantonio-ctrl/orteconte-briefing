@@ -391,7 +391,10 @@ function adicionarSocioQSA() {
 
   container.insertAdjacentHTML("beforeend", `
     <div class="border p-4 rounded-lg mb-4 bg-gray-50" data-socio>
-      <h4 class="font-semibold mb-3 text-blue-800">Sócio ${id}</h4>
+      <div class="flex items-center justify-between mb-3">
+        <h4 class="font-semibold text-blue-800">Sócio ${id}</h4>
+        <button type="button" onclick="removerSocioQSA(this)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Excluir Sócio</button>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input data-when-visible name="qsaNome" placeholder="Nome *" class="border p-2 rounded">
@@ -462,6 +465,12 @@ function adicionarSocioQSA() {
   `);
 
   atualizarSecoes();
+}
+
+function removerSocioQSA(botao) {
+  const blocoSocio = botao.closest("[data-socio]");
+  if (!blocoSocio) return;
+  blocoSocio.remove();
 }
 
 function toggleProlabore(id, select) {
