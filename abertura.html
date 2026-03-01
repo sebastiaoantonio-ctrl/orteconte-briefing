@@ -259,45 +259,22 @@
 
 </div>
 
-      <!-- ================= DADOS DOS SÓCIOS ================= -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
+     <!-- ================= DADOS DOS SÓCIOS ================= -->
+<div class="bg-white p-6 rounded-xl shadow">
+  <h2 class="text-xl font-bold mb-4">Dados dos Sócios</h2>
 
-        <div id="sociosContainer"></div>
+  <div id="sociosContainer"></div>
 
-        <button type="button"
-          onclick="adicionarSocio()"
-          class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
-          + Adicionar Sócio
-        </button>
-      </div>
-
-      <!-- ================= CHECKLIST ================= -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <h2 class="text-xl font-bold mb-4">Checklist de Documentos</h2>
-
-        <div class="space-y-2">
-          <label><input type="checkbox"> CNH dos Sócios</label><br>
-          <label><input type="checkbox"> IPTU do Imóvel</label><br>
-          <label><input type="checkbox"> Contrato de Locação</label><br>
-          <label><input type="checkbox"> Certificado Digital</label>
-        </div>
-
-        <textarea placeholder="Observações"
-          class="border p-2 rounded w-full mt-4"></textarea>
-      </div>
-
-      <button type="submit"
-        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
-        Salvar Briefing
-      </button>
-
-    </form>
-  </div>
-
+  <button id="btnAdicionarSocio" type="button"
+    class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
+    + Adicionar Sócio
+  </button>
 </div>
 
 <script>
+const formulario = document.querySelector("form");
+const botaoAdicionarSocio = document.getElementById("btnAdicionarSocio");
+
 function verificarPagamento() {
   const forma = document.getElementById("formaPagamento").value;
   const campo = document.getElementById("campoVencimento");
@@ -309,21 +286,7 @@ function verificarPagamento() {
   } else {
     campo.style.display = "none";
     vencimento.required = false;
-    vencimento.value = "";
-  }
-}
-<script>
-function verificarPagamento() {
-  const forma = document.getElementById("formaPagamento").value;
-  const campo = document.getElementById("campoVencimento");
-  const vencimento = document.getElementById("vencimento");
-
-  if (forma === "Boleto") {
-    campo.style.display = "block";
-    vencimento.required = true;
-  } else {
-    campo.style.display = "none";
-    vencimento.required = false;
+    vencimento.setCustomValidity("");
     vencimento.value = "";
   }
 }
@@ -339,17 +302,20 @@ function formatarMoeda(campo) {
 }
 
 function adicionarSocio() {
+  const container = document.getElementById("sociosContainer");
+
+  if (!container) {
+    return;
+  }
 
   contadorSocios++;
   const id = contadorSocios;
-  const container = document.getElementById("sociosContainer");
 
-  container.innerHTML += `
+  container.insertAdjacentHTML("beforeend", `
     <div class="border p-4 rounded-lg mb-4 bg-gray-50">
       <h3 class="font-semibold mb-3 text-blue-800">Sócio ${id}</h3>
 
       <div class="grid grid-cols-2 gap-4">
-
         <input placeholder="Nome" class="border p-2 rounded">
         <input placeholder="Quotas (R$)" class="border p-2 rounded">
         <input placeholder="Endereço" class="border p-2 rounded">
@@ -359,7 +325,6 @@ function adicionarSocio() {
         <input placeholder="Telefone" class="border p-2 rounded">
         <input placeholder="E-mail" class="border p-2 rounded">
 
-        <!-- Responsável RFB -->
         <div>
           <label class="block text-sm font-semibold">Responsável RFB</label>
           <select class="border p-2 rounded w-full">
@@ -369,7 +334,6 @@ function adicionarSocio() {
           </select>
         </div>
 
-        <!-- Administrador -->
         <div>
           <label class="block text-sm font-semibold">Administrador</label>
           <select class="border p-2 rounded w-full">
@@ -379,7 +343,6 @@ function adicionarSocio() {
           </select>
         </div>
 
-        <!-- Pró-labore -->
         <div>
           <label class="block text-sm font-semibold">Pró-labore</label>
           <select onchange="toggleProlabore(${id}, this.value)"
@@ -390,14 +353,12 @@ function adicionarSocio() {
           </select>
         </div>
 
-        <!-- Valor Pró-labore -->
         <div id="valorProlabore${id}" style="display:none;">
           <label class="block text-sm font-semibold">Valor Pró-labore</label>
           <input oninput="formatarMoeda(this)"
             class="border p-2 rounded w-full">
         </div>
 
-        <!-- Certificado Digital -->
         <div>
           <label class="block text-sm font-semibold">Certificado Digital</label>
           <select class="border p-2 rounded w-full">
@@ -407,7 +368,6 @@ function adicionarSocio() {
           </select>
         </div>
 
-        <!-- Acesso Gov.br -->
         <div>
           <label class="block text-sm font-semibold">Acesso Gov.br</label>
           <select onchange="toggleGov(${id}, this.value)"
@@ -418,15 +378,13 @@ function adicionarSocio() {
           </select>
         </div>
 
-        <!-- Senha Gov -->
         <div id="senhaGov${id}" style="display:none;">
           <label class="block text-sm font-semibold">Senha Gov.br</label>
           <input class="border p-2 rounded w-full">
         </div>
-
       </div>
     </div>
-  `;
+  `);
 }
 
 function toggleProlabore(id, valor) {
@@ -438,5 +396,78 @@ function toggleGov(id, valor) {
   const campo = document.getElementById("senhaGov" + id);
   campo.style.display = valor === "Sim" ? "block" : "none";
 }
+
+function toggleAdvogado() {
+  const natureza = document.getElementById("naturezaJuridica").value;
+  const bloco = document.getElementById("blocoAdvogado");
+  const advogado = document.getElementById("advogado");
+  const cpf = document.getElementById("cpfAdvogado");
+  const oab = document.getElementById("oab");
+
+  if (natureza === "Sociedade Anônima (S/A)") {
+    bloco.style.display = "grid";
+    advogado.required = true;
+    cpf.required = true;
+    oab.required = true;
+  } else {
+    bloco.style.display = "none";
+    advogado.required = false;
+    cpf.required = false;
+    oab.required = false;
+    advogado.setCustomValidity("");
+    cpf.setCustomValidity("");
+    oab.setCustomValidity("");
+    advogado.value = "";
+    cpf.value = "";
+    oab.value = "";
+  }
+}
+
+function validarFormulario(event) {
+  const forma = document.getElementById("formaPagamento").value;
+  const vencimento = document.getElementById("vencimento");
+
+  const natureza = document.getElementById("naturezaJuridica").value;
+  const advogado = document.getElementById("advogado");
+  const cpf = document.getElementById("cpfAdvogado");
+  const oab = document.getElementById("oab");
+
+  vencimento.setCustomValidity("");
+  advogado.setCustomValidity("");
+  cpf.setCustomValidity("");
+  oab.setCustomValidity("");
+
+  if (forma === "Boleto" && !vencimento.value) {
+    vencimento.setCustomValidity("Informe o vencimento para pagamento via boleto.");
+  }
+
+  if (natureza === "Sociedade Anônima (S/A)") {
+    const cpfLimpo = cpf.value.replace(/\D/g, "");
+
+    if (!advogado.value.trim()) {
+      advogado.setCustomValidity("Informe o nome do advogado.");
+    }
+
+    if (cpfLimpo.length !== 11) {
+      cpf.setCustomValidity("Informe um CPF válido com 11 dígitos.");
+    }
+
+    if (!oab.value.trim()) {
+      oab.setCustomValidity("Informe o número da OAB.");
+    }
+  }
+
+  if (!formulario.checkValidity()) {
+    event.preventDefault();
+    formulario.reportValidity();
+  }
+}
+
+if (formulario) {
+  formulario.addEventListener("submit", validarFormulario);
+}
+
+if (botaoAdicionarSocio) {
+  botaoAdicionarSocio.addEventListener("click", adicionarSocio);
+}
 </script>
-       
