@@ -395,142 +395,111 @@ function adicionarRodapeTodasPaginas(ctx) {
   }
 }
 
-// ================= CONTROLADOR =================
-function gerarPdfBriefing(item) {
-
-  switch (item.tipo) {
-
-    case "abertura":
-      gerarPdfAbertura(item);
-      break;
-
-    case "alteracao":
-      gerarPdfAlteracao(item);
-      break;
-
-    case "baixa":
-      gerarPdfBaixa(item);
-      break;
-
-    case "portabilidade-entrada":
-      gerarPdfPortabilidadeEntrada(item);
-      break;
-
-    case "portabilidade-saida":
-      gerarPdfPortabilidadeSaida(item);
-      break;
-
-    default:
-      gerarPdfGenerico(item);
-  }
-
-}
-
-// ================= MODELO ABERTURA =================
 function gerarPdfAbertura(item) {
-  gerarPdfModeloPadrao(item);
-}
-
-// ================= MODELO ALTERAÇÃO =================
-function gerarPdfAlteracao(item) {
-  gerarPdfModeloPadrao(item);
-}
-
-// ================= MODELO BAIXA =================
-function gerarPdfBaixa(item) {
-  gerarPdfModeloPadrao(item);
-}
-
-// ================= MODELO PORTABILIDADE ENTRADA =================
-function gerarPdfPortabilidadeEntrada(item) {
-  gerarPdfModeloPadrao(item);
-}
-
-// ================= MODELO PORTABILIDADE SAÍDA =================
-function gerarPdfPortabilidadeSaida(item) {
-  gerarPdfModeloPadrao(item);
-}
-
-// ================= MODELO GENÉRICO =================
-function gerarPdfGenerico(item) {
-  gerarPdfModeloPadrao(item);
-}
-
-// ================= SEU LAYOUT ORIGINAL =================
-function gerarPdfModeloPadrao(item) {
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const tipoBriefing = obterCampo(item, "tipo", "geral");
-  const ctx = criarContextoPdf(doc, tipoBriefing);
+
+  const dados = item.dados_json || {};
+  const ctx = criarContextoPdf(doc, "ABERTURA");
 
   desenharCabecalhoPdf(ctx);
 
+  // ================= DADOS INICIAIS =================
   desenharTituloSecao(ctx, "Dados Iniciais");
+
   desenharCamposEmLinha(ctx, [
-    { label: "Tipo de Processo", valor: obterCampo(item, "tipo"), proporcao: 0.35 },
-    { label: "Cliente", valor: obterCampo(item, "empresa"), proporcao: 0.45 },
-    { label: "Valor", valor: obterCampo(item, "valor"), proporcao: 0.20 }
-  ]);
-  desenharCamposEmLinha(ctx, [
-    { label: "Forma de Pagamento", valor: obterCampo(item, "forma_pagamento"), proporcao: 0.50 },
-    { label: "Caso Boleto Vencimento", valor: obterCampo(item, "boleto_vencimento"), proporcao: 0.50 }
+    { label: "Cliente", valor: dados.cliente, proporcao: 0.50 },
+    { label: "Valor", valor: dados.valor, proporcao: 0.25 },
+    { label: "Forma de Pagamento", valor: dados.formaPagamento, proporcao: 0.25 }
   ]);
 
+  desenharCamposEmLinha(ctx, [
+    { label: "Vencimento", valor: dados.vencimento, proporcao: 1.0 }
+  ]);
+
+  // ================= DADOS DA EMPRESA =================
   desenharTituloSecao(ctx, "Dados da Empresa");
-  desenharCamposEmLinha(ctx, [
-    { label: "Razão Social", valor: obterCampo(item, "empresa"), proporcao: 0.70 },
-    { label: "Grupo", valor: obterCampo(item, "grupo"), proporcao: 0.30 }
-  ]);
-  desenharCamposEmLinha(ctx, [
-    { label: "Nome Fantasia", valor: obterCampo(item, "nome_fantasia"), proporcao: 0.65 },
-    { label: "CNPJ", valor: obterCampo(item, "cpf_cnpj"), proporcao: 0.35 }
-  ]);
-  desenharCamposEmLinha(ctx, [
-    { label: "Natureza Jurídica", valor: obterCampo(item, "natureza_juridica"), proporcao: 0.42 },
-    { label: "Regime Tributário", valor: obterCampo(item, "regime_tributario"), proporcao: 0.32 },
-    { label: "Enquadramento", valor: obterCampo(item, "enquadramento"), proporcao: 0.26 }
-  ]);
-  desenharCaixaTexto(ctx, "Endereço Comercial", obterCampo(item, "endereco"));
-  desenharCaixaTexto(ctx, "Objeto Social", obterCampo(item, "objeto_social"));
-  desenharCamposEmLinha(ctx, [
-    { label: "Capital Social", valor: obterCampo(item, "capital_social"), proporcao: 0.30 },
-    { label: "Telefone", valor: obterCampo(item, "telefone"), proporcao: 0.25 },
-    { label: "Email", valor: obterCampo(item, "email"), proporcao: 0.45 }
-  ]);
-  desenharCamposEmLinha(ctx, [
-    { label: "Responsável RFB", valor: obterCampo(item, "responsavel_rfb"), proporcao: 0.57 },
-    { label: "Novo Honorário", valor: obterCampo(item, "novo_honorario"), proporcao: 0.16 },
-    { label: "Valor", valor: obterCampo(item, "valor_honorario"), proporcao: 0.27 }
-  ]);
-  desenharCaixaTexto(ctx, "Orientações", obterCampo(item, "orientacoes"));
 
+  desenharCamposEmLinha(ctx, [
+    { label: "Razão Social", valor: dados.razaoSocial, proporcao: 0.70 },
+    { label: "Grupo", valor: dados.grupo, proporcao: 0.30 }
+  ]);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "Nome Fantasia", valor: dados.nomeFantasia, proporcao: 0.60 },
+    { label: "Enquadramento", valor: dados.enquadramento, proporcao: 0.40 }
+  ]);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "Natureza Jurídica", valor: dados.naturezaJuridica, proporcao: 0.50 },
+    { label: "Regime Tributário", valor: dados.regimeTributario, proporcao: 0.50 }
+  ]);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "CNAE Principal", valor: dados.cnaePrincipal, proporcao: 0.50 },
+    { label: "CNAEs Secundários", valor: dados.cnaesSecundarios, proporcao: 0.50 }
+  ]);
+
+  desenharCaixaTexto(ctx, "Atividades Desenvolvidas", dados.atividades);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "Endereço", valor: dados.endereco, proporcao: 1.0 }
+  ]);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "Telefone", valor: dados.telefone, proporcao: 0.50 },
+    { label: "Email", valor: dados.email, proporcao: 0.50 }
+  ]);
+
+  desenharCamposEmLinha(ctx, [
+    { label: "Honorário", valor: dados.honorario, proporcao: 0.50 },
+    { label: "Vencimento", valor: dados.vencimentoHonorario, proporcao: 0.50 }
+  ]);
+
+  // ================= SÓCIOS =================
   desenharTituloSecao(ctx, "Dados dos Sócios");
-  const socios = extrairSocios(item);
+
+  const socios = dados.socios || [];
+
   if (!socios.length) {
-    desenharCaixaTexto(ctx, "Sócios", "Não há sócios cadastrados em dados_json.");
+    desenharCaixaTexto(ctx, "Sócios", "Nenhum sócio informado.");
   } else {
     socios.forEach((socio, index) => {
+
       desenharSubsecaoSocio(ctx, `Sócio ${index + 1}`);
+
       desenharCamposEmLinha(ctx, [
-        { label: "Nome", valor: socio.nome || "-", proporcao: 0.65 },
-        { label: "Quotas", valor: socio.quotas || "-", proporcao: 0.35 }
+        { label: "Nome", valor: socio.nome, proporcao: 0.60 },
+        { label: "Quotas", valor: socio.quotas, proporcao: 0.40 }
+      ]);
+
+      desenharCamposEmLinha(ctx, [
+        { label: "Administrador", valor: socio.administrador, proporcao: 0.33 },
+        { label: "Pró-labore", valor: socio.prolabore, proporcao: 0.33 },
+        { label: "Valor Pró-labore", valor: socio.valorProlabore, proporcao: 0.34 }
+      ]);
+
+      desenharCamposEmLinha(ctx, [
+        { label: "Certificado Digital", valor: socio.certificadoDigital, proporcao: 0.50 },
+        { label: "Acesso Gov.br", valor: socio.acessoGov, proporcao: 0.50 }
       ]);
     });
   }
 
+  // ================= CONTROLE =================
   desenharTituloSecao(ctx, "Controle do Briefing");
+
   desenharCamposEmLinha(ctx, [
-    { label: "Status", valor: obterCampo(item, "status"), proporcao: 0.33 },
-    { label: "Criado em", valor: item.criado_em ? new Date(item.criado_em).toLocaleString() : "-", proporcao: 0.34 },
-    { label: "ID", valor: obterCampo(item, "id"), proporcao: 0.33 }
+    { label: "Status", valor: item.status, proporcao: 0.33 },
+    { label: "Criado em", valor: new Date(item.criado_em).toLocaleString(), proporcao: 0.34 },
+    { label: "ID", valor: item.id, proporcao: 0.33 }
   ]);
 
   adicionarRodapeTodasPaginas(ctx);
 
-  const tipo = valorSeguro(obterCampo(item, "tipo", "geral")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
-  const empresa = valorSeguro(obterCampo(item, "empresa", "empresa")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
-  doc.save(`briefing_${tipo}_${empresa}.pdf`);
+  const empresa = (dados.razaoSocial || "empresa").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+  doc.save(`briefing_abertura_${empresa}.pdf`);
 }
 
 carregarHistorico();
