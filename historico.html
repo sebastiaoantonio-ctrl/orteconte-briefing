@@ -95,6 +95,34 @@ function renderizarMensagemTabela(mensagem, classe = "text-gray-500") {
   `;
 }
 
+function obterDadosBriefing(item) {
+  const bruto = item?.dados_json ?? item?.dados_jason ?? null;
+
+  if (!bruto) return {};
+  if (typeof bruto === "object") return bruto;
+
+  if (typeof bruto === "string") {
+    try {
+      const parseado = JSON.parse(bruto);
+      return (parseado && typeof parseado === "object") ? parseado : {};
+    } catch (erro) {
+      console.warn("Campo de dados do briefing inválido:", erro);
+      return {};
+    }
+  }
+
+  return {};
+}
+
+
+function obterPrimeiroValor(dados, chaves = [], fallback = "-") {
+  for (const chave of chaves) {
+    const valor = dados?.[chave];
+    if (valor !== undefined && valor !== null && valor !== "") return valor;
+  }
+  return fallback;
+}
+
 async function carregarHistorico() {
   const statusFiltro = obterParametro("status");
 
@@ -190,8 +218,9 @@ function obterCampo(item, chave, fallback = "-") {
     return valorSeguro(valorDireto);
   }
 
-  if (item.dados_json && typeof item.dados_json === "object") {
-    const valorJson = item.dados_json[chave];
+  const dados = obterDadosBriefing(item);
+  if (dados && typeof dados === "object") {
+    const valorJson = dados[chave];
     if (valorJson !== undefined && valorJson !== null && valorJson !== "") {
       return valorSeguro(valorJson);
     }
@@ -339,7 +368,7 @@ function desenharSubsecaoSocio(ctx, titulo) {
 }
 
 function extrairSocios(item) {
-  const dados = item && item.dados_json;
+ const dados = obterDadosBriefing(item);
   if (!dados || typeof dados !== "object") return [];
 
   const possiveisChaves = ["socios", "sócios", "quadro_societario", "quadroSocietario"];
@@ -351,7 +380,7 @@ function extrairSocios(item) {
 }
 
 function extrairChecklist(item) {
-  const dados = item && item.dados_json;
+  const dados = obterDadosBriefing(item);
   if (!dados || typeof dados !== "object") return [];
 
   if (Array.isArray(dados.checklist)) {
@@ -437,12 +466,13 @@ function gerarPdfResumo(item, tipo) {
     { label: "Criado em", valor: new Date(item.criado_em).toLocaleString(), proporcao: 1.0 }
   ]);
 
-  const dados = item.dados_json && typeof item.dados_json === "object"
-    ? JSON.stringify(item.dados_json, null, 2)
+  const dadosJson = obterDadosBriefing(item);
+  const dados = Object.keys(dadosJson).length > 0
+    ? JSON.stringify(dadosJson, null, 2)
     : "Sem detalhes adicionais.";
 
   desenharTituloSecao(ctx, "Conteúdo do Briefing");
-  desenharCaixaTexto(ctx, "dados_json", dados);
+  desenharCaixaTexto(ctx, "Dados do briefing", dados);
 
   adicionarRodapeTodasPaginas(ctx);
 
@@ -457,7 +487,7 @@ function gerarPdfAbertura(item) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "mm", format: "a4" });
 
-  const dados = item.dados_json || {};
+  const dados = obterDadosBriefing(item);
   const ctx = criarContextoPdf(doc, "ABERTURA");
 
   desenharCabecalhoPdf(ctx);
@@ -466,31 +496,31 @@ function gerarPdfAbertura(item) {
   desenharTituloSecao(ctx, "Dados Iniciais");
 
   desenharCamposEmLinha(ctx, [
-    { label: "Cliente", valor: dados.cliente, proporcao: 0.50 },
-    { label: "Valor", valor: dados.valor, proporcao: 0.25 },
-    { label: "Forma de Pagamento", valor: dados.formaPagamento, proporcao: 0.25 }
+    { label: "Cliente", valor: obterPrimeiroValor(dados, ["cliente"]), proporcao: 0.50 },
+    { label: "Valor", valor: obterPrimeiroValor(dados, ["valor", "valorProcesso"]), proporcao: 0.25 },
+    { label: "Forma de Pagamento", valor: obterPrimeiroValor(dados, ["formaPagamento"]), proporcao: 0.25 }
   ]);
 
   desenharCamposEmLinha(ctx, [
-    { label: "Vencimento", valor: dados.vencimento, proporcao: 1.0 }
+    { label: "Vencimento", valor: obterPrimeiroValor(dados, ["vencimento", "vencimentoBoleto"]), proporcao: 1.0 }
   ]);
 
   // ================= DADOS DA EMPRESA =================
   desenharTituloSecao(ctx, "Dados da Empresa");
 
   desenharCamposEmLinha(ctx, [
-    { label: "Razão Social", valor: dados.razaoSocial, proporcao: 0.70 },
+    { label: "Razão Social", valor: obterPrimeiroValor(dados, ["razaoSocial", "empresa"]), proporcao: 0.70 },
     { label: "Grupo", valor: dados.grupo, proporcao: 0.30 }
   ]);
 
   desenharCamposEmLinha(ctx, [
-    { label: "Nome Fantasia", valor: dados.nomeFantasia, proporcao: 0.60 },
-    { label: "Enquadramento", valor: dados.enquadramento, proporcao: 0.40 }
+    { label: "Nome Fantasia", valor: obterPrimeiroValor(dados, ["nomeFantasia", "nomeFantasiaAtual"]), proporcao: 0.60 },
+    { label: "Enquadramento", valor: obterPrimeiroValor(dados, ["enquadramento", "enquadramentoAtual"]), proporcao: 0.40 }
   ]);
 
   desenharCamposEmLinha(ctx, [
-    { label: "Natureza Jurídica", valor: dados.naturezaJuridica, proporcao: 0.50 },
-    { label: "Regime Tributário", valor: dados.regimeTributario, proporcao: 0.50 }
+    { label: "Natureza Jurídica", valor: obterPrimeiroValor(dados, ["naturezaJuridica", "novaNaturezaJuridica", "naturezaJuridicaAtual"]), proporcao: 0.50 },
+    { label: "Regime Tributário", valor: obterPrimeiroValor(dados, ["regimeTributario", "novoRegimeTributario", "regimeTributarioAtual"]), proporcao: 0.50 }
   ]);
 
   desenharCamposEmLinha(ctx, [
@@ -498,15 +528,15 @@ function gerarPdfAbertura(item) {
     { label: "CNAEs Secundários", valor: dados.cnaesSecundarios, proporcao: 0.50 }
   ]);
 
-  desenharCaixaTexto(ctx, "Atividades Desenvolvidas", dados.atividades);
+  desenharCaixaTexto(ctx, "Atividades Desenvolvidas", obterPrimeiroValor(dados, ["atividades", "objetoSocialAtual"]));
 
   desenharCamposEmLinha(ctx, [
     { label: "Endereço", valor: dados.endereco, proporcao: 1.0 }
   ]);
 
   desenharCamposEmLinha(ctx, [
-    { label: "Telefone", valor: dados.telefone, proporcao: 0.50 },
-    { label: "Email", valor: dados.email, proporcao: 0.50 }
+   { label: "Telefone", valor: obterPrimeiroValor(dados, ["telefone", "telefoneAtual", "qsaTelefone"]), proporcao: 0.50 },
+    { label: "Email", valor: obterPrimeiroValor(dados, ["email", "emailAtual", "qsaEmail"]), proporcao: 0.50 }
   ]);
 
   desenharCamposEmLinha(ctx, [
@@ -517,7 +547,18 @@ function gerarPdfAbertura(item) {
   // ================= SÓCIOS =================
   desenharTituloSecao(ctx, "Dados dos Sócios");
 
-  const socios = dados.socios || [];
+  const socios = extrairSocios(item);
+  if (!socios.length && (dados.qsaNome || dados.qsaEmail || dados.qsaTelefone)) {
+    socios.push({
+      nome: dados.qsaNome,
+      quotas: dados.qsaQuotas,
+      administrador: dados.qsaAdministrador,
+      prolabore: dados.qsaProLabore,
+      valorProlabore: dados.qsaValorProlabore,
+      certificadoDigital: dados.qsaCertificadoDigital,
+      acessoGov: dados.qsaGovBr
+    });
+  }
 
   if (!socios.length) {
     desenharCaixaTexto(ctx, "Sócios", "Nenhum sócio informado.");
@@ -555,7 +596,7 @@ function gerarPdfAbertura(item) {
 
   adicionarRodapeTodasPaginas(ctx);
 
-  const empresa = (dados.razaoSocial || "empresa").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+  const empresa = valorSeguro(obterPrimeiroValor(dados, ["razaoSocial", "empresa", "nomeFantasiaAtual"], "empresa")).replace(/[^a-z0-9]/gi, "_").toLowerCase();
   doc.save(`briefing_abertura_${empresa}.pdf`);
 }
 
