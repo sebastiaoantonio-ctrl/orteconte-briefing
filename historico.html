@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Histórico - Orteconte</title>
   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="bg-gray-100">
 
@@ -32,6 +33,7 @@
             <th class="text-left p-2">Empresa</th>
             <th class="text-left p-2">Status</th>
             <th class="text-left p-2">Data</th>
+            <th class="text-left p-2">Ações</th>
           </tr>
         </thead>
         <tbody id="tabela"></tbody>
@@ -98,7 +100,7 @@ async function carregarHistorico() {
   if (data.length === 0) {
     tabela.innerHTML = `
       <tr>
-        <td colspan="4" class="p-4 text-center text-gray-500">
+        <td colspan="5" class="p-4 text-center text-gray-500">
           Nenhum registro encontrado.
         </td>
       </tr>
@@ -107,22 +109,83 @@ async function carregarHistorico() {
   }
 
   data.forEach(item => {
-    tabela.innerHTML += `
-      <tr class="border-b hover:bg-gray-50">
-        <td class="p-2">${item.tipo}</td>
-        <td class="p-2">${item.empresa}</td>
-        <td class="p-2">
-          <select onchange="atualizarStatus('${item.id}', this.value)"
-            class="border p-1 rounded">
-            <option ${item.status==="Pendente"?"selected":""}>Pendente</option>
-            <option ${item.status==="Em Andamento"?"selected":""}>Em Andamento</option>
-            <option ${item.status==="Finalizado"?"selected":""}>Finalizado</option>
-          </select>
-        </td>
-        <td class="p-2">${new Date(item.criado_em).toLocaleString()}</td>
-      </tr>
+   const linha = document.createElement("tr");
+    linha.className = "border-b hover:bg-gray-50";
+
+    linha.innerHTML = `
+      <td class="p-2">${item.tipo || "-"}</td>
+      <td class="p-2">${item.empresa || "-"}</td>
+      <td class="p-2">
+        <select onchange="atualizarStatus('${item.id}', this.value)"
+          class="border p-1 rounded">
+          <option ${item.status==="Pendente"?"selected":""}>Pendente</option>
+          <option ${item.status==="Em Andamento"?"selected":""}>Em Andamento</option>
+          <option ${item.status==="Finalizado"?"selected":""}>Finalizado</option>
+        </select>
+      </td>
+      <td class="p-2">${new Date(item.criado_em).toLocaleString()}</td>
+      <td class="p-2"></td>
     `;
+
+    const celulaAcoes = linha.lastElementChild;
+    const botaoPdf = document.createElement("button");
+    botaoPdf.type = "button";
+    botaoPdf.innerText = "Gerar PDF";
+    botaoPdf.className = "bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded";
+    botaoPdf.addEventListener("click", () => gerarPdfBriefing(item));
+    celulaAcoes.appendChild(botaoPdf);
+
+    tabela.appendChild(linha);
   });
+}
+
+  function montarLinhasDoBriefing(item) {
+  const linhas = [
+    ["Tipo", item.tipo],
+    ["Empresa", item.empresa],
+    ["CPF/CNPJ", item.cpf_cnpj],
+    ["Grupo", item.grupo],
+    ["Status", item.status],
+    ["Criado em", new Date(item.criado_em).toLocaleString()]
+  ];
+
+  if (item.dados_json && typeof item.dados_json === "object") {
+    Object.entries(item.dados_json).forEach(([chave, valor]) => {
+      const valorTexto = typeof valor === "object"
+        ? JSON.stringify(valor)
+        : String(valor ?? "-");
+      linhas.push([chave, valorTexto]);
+    });
+  }
+
+  return linhas;
+}
+
+function gerarPdfBriefing(item) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Briefing - Orteconte", 14, 20);
+
+  doc.setFontSize(11);
+  let y = 32;
+  const larguraMaxima = 180;
+
+  montarLinhasDoBriefing(item).forEach(([campo, valor]) => {
+    const linha = `${campo}: ${valor || "-"}`;
+    const linhasQuebradas = doc.splitTextToSize(linha, larguraMaxima);
+    doc.text(linhasQuebradas, 14, y);
+    y += linhasQuebradas.length * 6;
+
+    if (y > 275) {
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  const empresa = (item.empresa || "briefing").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+  doc.save(`briefing_${empresa}.pdf`);
 }
 
 carregarHistorico();
