@@ -15,7 +15,7 @@
       <li class="mb-3"><a href="dashboard.html">Dashboard</a></li>
       <li class="mb-3 font-bold"><a href="novo.html">Novo Briefing</a></li>
       <li class="mb-3"><a href="historico.html">Histórico</a></li>
-      <li class="mt-6"><button onclick="logout()" class="text-red-300">Sair</button></li>
+      <li class="mt-6"><button type="button" onclick="logout()" class="text-red-300">Sair</button></li>
     </ul>
   </aside>
 
@@ -61,11 +61,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="md:col-span-2">
             <label class="block font-semibold mb-1">Razão Social *</label>
-            <input name="razaoSocial" required class="border p-2 rounded w-full">
+            <input id="empresa" name="razaoSocial" required class="border p-2 rounded w-full">
           </div>
           <div>
             <label class="block font-semibold mb-1">Grupo</label>
-            <input name="grupo" class="border p-2 rounded w-full">
+            <input id="grupo" name="grupo" class="border p-2 rounded w-full">
           </div>
 
           <div class="md:col-span-2">
@@ -74,7 +74,7 @@
           </div>
           <div>
             <label class="block font-semibold mb-1">CNPJ *</label>
-            <input name="cnpj" required class="border p-2 rounded w-full">
+            <input id="cpf_cnpj" name="cnpj" required class="border p-2 rounded w-full">
           </div>
 
           <div class="md:col-span-3">
@@ -184,11 +184,22 @@
           Salvar Briefing
         </button>
       </div>
+
+      <p id="msg" class="font-semibold"></p>
     </form>
   </main>
 </div>
 
+<script src="js/config.js"></script>
 <script>
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) window.location.href = "index.html";
+
+function logout() {
+  localStorage.removeItem("usuario");
+  window.location.href = "index.html";
+}
+
 function formatarMoeda(campo) {
   let valor = campo.value.replace(/\D/g, "");
   if (!valor) {
@@ -219,9 +230,62 @@ function toggleVencimentoBoleto() {
   }
 }
 
-document.getElementById("formaPagamento").addEventListener("change", toggleVencimentoBoleto);
-</script>
+function coletarCamposVisiveis() {
+  const dados = {};
+  const campos = document.querySelectorAll("#formBaixa input, #formBaixa select, #formBaixa textarea");
 
-<script src="js/login.js"></script>
+  campos.forEach((campo) => {
+    if (campo.disabled || !campo.name) return;
+    dados[campo.name] = campo.value;
+  });
+
+  return dados;
+}
+
+document.getElementById("formaPagamento").addEventListener("change", toggleVencimentoBoleto);
+
+document.getElementById("formBaixa").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  if (!form.reportValidity()) return;
+
+  const msg = document.getElementById("msg");
+  msg.className = "font-semibold text-blue-700";
+  msg.innerText = "Salvando briefing...";
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/briefings`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({
+        tipo: "baixa",
+        empresa: document.getElementById("empresa").value,
+        cpf_cnpj: document.getElementById("cpf_cnpj").value,
+        grupo: document.getElementById("grupo").value || null,
+        usuario_id: usuario.id,
+        dados_json: coletarCamposVisiveis(),
+        status: "Pendente"
+      })
+    });
+
+    if (!response.ok) throw new Error("Falha ao salvar briefing");
+
+    msg.className = "font-semibold text-green-700";
+    msg.innerText = "Briefing salvo com sucesso! Redirecionando...";
+    setTimeout(() => { window.location.href = "historico.html"; }, 1000);
+  } catch (erro) {
+    msg.className = "font-semibold text-red-700";
+    msg.innerText = "Erro ao salvar briefing. Tente novamente.";
+  }
+});
+
+toggleVencimentoBoleto();
+</script>
 </body>
 </html>
