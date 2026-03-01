@@ -139,54 +139,205 @@ async function carregarHistorico() {
   });
 }
 
-  function montarLinhasDoBriefing(item) {
-  const linhas = [
-    ["Tipo", item.tipo],
-    ["Empresa", item.empresa],
-    ["CPF/CNPJ", item.cpf_cnpj],
-    ["Grupo", item.grupo],
-    ["Status", item.status],
-    ["Criado em", new Date(item.criado_em).toLocaleString()]
-  ];
+  function valorSeguro(valor) {
+  if (valor === null || valor === undefined || valor === "") return "-";
+  if (typeof valor === "object") return JSON.stringify(valor);
+  return String(valor);
+}
 
-  if (item.dados_json && typeof item.dados_json === "object") {
-    Object.entries(item.dados_json).forEach(([chave, valor]) => {
-      const valorTexto = typeof valor === "object"
-        ? JSON.stringify(valor)
-        : String(valor ?? "-");
-      linhas.push([chave, valorTexto]);
-    });
+function obterCampo(item, chave, fallback = "-") {
+  const valorDireto = item[chave];
+  if (valorDireto !== undefined && valorDireto !== null && valorDireto !== "") {
+    return valorSeguro(valorDireto);
   }
 
-  return linhas;
+  if (item.dados_json && typeof item.dados_json === "object") {
+    const valorJson = item.dados_json[chave];
+    if (valorJson !== undefined && valorJson !== null && valorJson !== "") {
+      return valorSeguro(valorJson);
+    }
+  }
+
+  return fallback;
+}
+
+function desenharSecao(doc, titulo, y) {
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.5);
+  doc.line(10, y, 200, y);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text(titulo, 10, y + 5);
+
+  return y + 7;
+}
+
+function desenharLinhaCampos(doc, y, campos) {
+  const altura = 9;
+  const xInicial = 10;
+  const larguraTotal = 190;
+
+  doc.rect(xInicial, y, larguraTotal, altura);
+
+  let cursorX = xInicial;
+  campos.forEach((campo, index) => {
+    const largura = larguraTotal * campo.proporcao;
+    if (index > 0) {
+      doc.line(cursorX, y, cursorX, y + altura);
+    }
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+
+    const texto = `${campo.label}: ${valorSeguro(campo.valor)}`;
+    const linhas = doc.splitTextToSize(texto, largura - 3);
+    doc.text(linhas.slice(0, 2), cursorX + 1.5, y + 6);
+
+    cursorX += largura;
+  });
+
+  return y + altura;
+}
+
+function desenharCaixaTexto(doc, y, titulo, valor, altura = 22) {
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text(titulo, 10, y + 5);
+
+  const top = y + 7;
+  doc.rect(10, top, 190, altura);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  const linhas = doc.splitTextToSize(valorSeguro(valor), 185);
+  doc.text(linhas.slice(0, Math.floor((altura - 4) / 4)), 12, top + 5);
+
+  return top + altura + 3;
 }
 
 function gerarPdfBriefing(item) {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+  // Cabeçalho aproximado ao modelo enviado
+  doc.setFillColor(74, 102, 148);
+  doc.rect(67, 10, 120, 9, "F");
+  doc.setDrawColor(74, 102, 148);
+  doc.setLineWidth(0.7);
+  doc.line(67, 20.5, 187, 20.5);
+
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(74, 102, 148);
+  doc.setFontSize(24);
+  doc.text("Orteconte", 30, 17);
+  doc.setFontSize(8);
+  doc.text("CONTABILIDADE", 35, 21);
 
   doc.setFontSize(16);
-  doc.text("Briefing - Orteconte", 14, 20);
+  doc.text("BRIEFING SOCIETÁRIO", 105, 34, { align: "center" });
 
-  doc.setFontSize(11);
-  let y = 32;
-  const larguraMaxima = 180;
+  doc.setTextColor(0, 0, 0);
 
-  montarLinhasDoBriefing(item).forEach(([campo, valor]) => {
-    const linha = `${campo}: ${valor || "-"}`;
-    const linhasQuebradas = doc.splitTextToSize(linha, larguraMaxima);
-    doc.text(linhasQuebradas, 14, y);
-    y += linhasQuebradas.length * 6;
+  let y = 40;
 
-    if (y > 275) {
-      doc.addPage();
-      y = 20;
-    }
-  });
+  y = desenharSecao(doc, "Dados Iniciais", y);
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Tipo de Processo", valor: obterCampo(item, "tipo"), proporcao: 0.40 },
+    { label: "Cliente", valor: obterCampo(item, "empresa"), proporcao: 0.40 },
+    { label: "Valor", valor: obterCampo(item, "valor"), proporcao: 0.20 }
+  ]);
+
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Forma de Pagamento", valor: obterCampo(item, "forma_pagamento"), proporcao: 0.50 },
+    { label: "Caso Boleto Vencimento", valor: obterCampo(item, "boleto_vencimento"), proporcao: 0.50 }
+  ]) + 4;
+
+  y = desenharSecao(doc, "Dados da Empresa", y);
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Razão Social", valor: obterCampo(item, "empresa"), proporcao: 0.74 },
+    { label: "Grupo", valor: obterCampo(item, "grupo"), proporcao: 0.26 }
+  ]);
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Nome Fantasia", valor: obterCampo(item, "nome_fantasia"), proporcao: 0.66 },
+    { label: "CNPJ", valor: obterCampo(item, "cpf_cnpj"), proporcao: 0.34 }
+  ]);
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Natureza Jurídica", valor: obterCampo(item, "natureza_juridica"), proporcao: 0.44 },
+    { label: "Regime Tributário", valor: obterCampo(item, "regime_tributario"), proporcao: 0.30 },
+    { label: "Enquadramento", valor: obterCampo(item, "enquadramento"), proporcao: 0.26 }
+  ]) + 2;
+
+  y = desenharCaixaTexto(doc, y, "Endereço Comercial", obterCampo(item, "endereco"), 16);
+  y = desenharCaixaTexto(doc, y, "Objeto Social", obterCampo(item, "objeto_social"), 16);
+
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Capital Social", valor: obterCampo(item, "capital_social"), proporcao: 0.30 },
+    { label: "Telefone", valor: obterCampo(item, "telefone"), proporcao: 0.25 },
+    { label: "Email", valor: obterCampo(item, "email"), proporcao: 0.45 }
+  ]);
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Responsável RFB", valor: obterCampo(item, "responsavel_rfb"), proporcao: 0.57 },
+    { label: "Novo Honorário", valor: obterCampo(item, "novo_honorario"), proporcao: 0.16 },
+    { label: "Valor", valor: obterCampo(item, "valor_honorario"), proporcao: 0.27 }
+  ]) + 4;
+
+  y = desenharCaixaTexto(doc, y, "Orientações", obterCampo(item, "orientacoes"), 20);
+
+  if (y > 235) {
+    doc.addPage();
+    y = 15;
+  }
+
+  y = desenharSecao(doc, "Controle do Briefing", y);
+  y = desenharLinhaCampos(doc, y, [
+    { label: "Status", valor: obterCampo(item, "status"), proporcao: 0.33 },
+    { label: "Criado em", valor: new Date(item.criado_em).toLocaleString(), proporcao: 0.34 },
+    { label: "ID", valor: obterCampo(item, "id"), proporcao: 0.33 }
+  ]) + 3;
+
+  y = desenharSecao(doc, "Dados Complementares", y);
+
+  const ignorar = new Set([
+    "tipo", "empresa", "cpf_cnpj", "grupo", "status", "criado_em", "id",
+    "valor", "forma_pagamento", "boleto_vencimento", "nome_fantasia", "natureza_juridica",
+    "regime_tributario", "enquadramento", "endereco", "objeto_social", "capital_social",
+    "telefone", "email", "responsavel_rfb", "novo_honorario", "valor_honorario", "orientacoes"
+  ]);
+
+  const complementares = [];
+  if (item.dados_json && typeof item.dados_json === "object") {
+    Object.entries(item.dados_json).forEach(([chave, valor]) => {
+      if (!ignorar.has(chave)) {
+        complementares.push([chave, valorSeguro(valor)]);
+      }
+    });
+  }
+
+  if (!complementares.length) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Sem dados complementares informados.", 10, y + 5);
+  } else {
+    complementares.forEach(([chave, valor]) => {
+      if (y > 275) {
+        doc.addPage();
+        y = 15;
+      }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text(`${chave}:`, 10, y + 4);
+      doc.setFont("helvetica", "normal");
+      const linhas = doc.splitTextToSize(valor, 160);
+      doc.text(linhas, 40, y + 4);
+      y += Math.max(7, linhas.length * 4 + 2);
+    });
+  }
 
   const empresa = (item.empresa || "briefing").replace(/[^a-z0-9]/gi, "_").toLowerCase();
   doc.save(`briefing_${empresa}.pdf`);
 }
+  
 
 carregarHistorico();
 </script>
