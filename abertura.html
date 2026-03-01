@@ -289,8 +289,11 @@ document.getElementById("sociosContainer").insertAdjacentHTML("beforeend",`
   const container = document.getElementById("sociosContainer");
 
   container.innerHTML += `
-    <div class="border p-4 rounded-lg mb-4 bg-gray-50">
-      <h3 class="font-semibold mb-3 text-blue-800">Sócio ${id}</h3>
+    <div class="border p-4 rounded-lg mb-4 bg-gray-50" data-socio>
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold text-blue-800">Sócio ${id}</h3>
+        <button type="button" onclick="removerSocio(this)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Excluir Sócio</button>
+      </div>
 
       <div class="grid grid-cols-2 gap-4">
 
@@ -373,6 +376,13 @@ document.getElementById("sociosContainer").insertAdjacentHTML("beforeend",`
   `;
 }
 
+
+  function removerSocio(botao) {
+  const card = botao.closest('[data-socio]');
+  if (!card) return;
+  card.remove();
+}
+  
 function toggleProlabore(id, valor) {
   const campo = document.getElementById("valorProlabore" + id);
   campo.style.display = valor === "Sim" ? "block" : "none";
